@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   
-  private TalonFX coralIntake;
+  private final TalonFX coralIntake;
 
   public CoralIntakeSubsystem() {
     coralIntake = new TalonFX(9);
