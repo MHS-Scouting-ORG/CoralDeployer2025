@@ -26,6 +26,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   public void stop(){
     coralIntake.setVoltage(0);
+    coralIntake.stopMotor();
   }
 
   @Override
