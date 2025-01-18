@@ -35,6 +35,18 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
     config.inverted(reverse).idleMode(IdleMode.kBrake);
     max.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
+  public void intake(double speed){ // speed = amount of voltage on motor
+    algaeIntake.set(speed);
+  }
+
+  public void outtake(double speed){
+    algaeIntake.set(-speed);
+  }
+
+  public void stopAlgaeIntake(){
+    algaeIntake.set(0);
+    algaeIntake.stopMotor();
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

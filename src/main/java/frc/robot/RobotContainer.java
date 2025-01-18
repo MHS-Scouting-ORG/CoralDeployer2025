@@ -16,6 +16,7 @@ import frc.robot.commands.CoralSwitchCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.AlgaeIntakeSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -23,10 +24,12 @@ public class RobotContainer {
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final CoralSwitchCommand coralSwitchCmd = new CoralSwitchCommand(coralIntakeSub);
   private final Joystick stick = new Joystick(0);
+  private final AlgaeIntakeSubsystem algaeIntakeSub = new AlgaeIntakeSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -35,12 +38,15 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(stick, 1).whileTrue(new InstantCommand(() -> coralIntakeSub.intake(5)));
+    new JoystickButton(stick, 1).whileTrue(new InstantCommand(() -> coralIntakeSub.intake(2)));
     new JoystickButton(stick, 1).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
-    new JoystickButton(stick, 2).whileTrue(new InstantCommand(() -> coralIntakeSub.outtake(5)));
+    new JoystickButton(stick, 2).whileTrue(new InstantCommand(() -> coralIntakeSub.outtake(2)));
     new JoystickButton(stick, 2).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
     new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
-    
+    new JoystickButton(stick, 4).whileTrue(new InstantCommand(() -> algaeIntakeSub.intake(0.1)));
+    new JoystickButton(stick, 4).whileFalse(new InstantCommand(() -> algaeIntakeSub.stopAlgaeIntake()));
+    new JoystickButton(stick, 5).whileTrue(new InstantCommand(() -> algaeIntakeSub.outtake(0.1)));
+    new JoystickButton(stick, 5).whileFalse(new InstantCommand(() -> algaeIntakeSub.stopAlgaeIntake()));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
