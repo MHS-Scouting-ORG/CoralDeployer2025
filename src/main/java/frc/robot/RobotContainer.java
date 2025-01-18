@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.CoralSwitchCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -20,6 +21,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
+  private final CoralSwitchCommand coralSwitchCmd = new CoralSwitchCommand(coralIntakeSub);
   private final Joystick stick = new Joystick(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -34,9 +36,10 @@ public class RobotContainer {
 
   private void configureBindings() {
     new JoystickButton(stick, 1).whileTrue(new InstantCommand(() -> coralIntakeSub.intake(5)));
-    new JoystickButton(stick, 1).whileFalse(new InstantCommand(() -> coralIntakeSub.stop()));
+    new JoystickButton(stick, 1).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
     new JoystickButton(stick, 2).whileTrue(new InstantCommand(() -> coralIntakeSub.outtake(5)));
-    new JoystickButton(stick, 2).whileFalse(new InstantCommand(() -> coralIntakeSub.stop()));
+    new JoystickButton(stick, 2).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
+    new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
