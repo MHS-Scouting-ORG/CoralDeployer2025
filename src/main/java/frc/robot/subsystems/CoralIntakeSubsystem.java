@@ -1,55 +1,51 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   
-  private final TalonFX coralIntake;
-  private final SparkMax coralSwitch;
-  private final RelativeEncoder coralSwitchEnc;
+  private final TalonSRX coralIntake;
+  private final TalonSRX coralPivot;
 
   public CoralIntakeSubsystem() {
-    coralIntake = new TalonFX(9);
-    coralSwitch = new SparkMax(1, MotorType.kBrushless);
-    coralSwitchEnc = coralSwitch.getEncoder();
+    coralIntake = new TalonSRX(9);
+    coralPivot = new TalonSRX(1);
   }
 
   public void coralSwitchUp(double speed){
-    coralSwitch.set(speed);
+    coralPivot.set(TalonSRXControlMode.Velocity, speed);
   }
 
   public void coralSwitchDown(double speed){
-    coralSwitch.set(-speed);
+    coralPivot.set(TalonSRXControlMode.Velocity, -speed);
   }
 
   public void stopCoralSwitch(){
-    coralSwitch.stopMotor();
+    coralPivot.set(TalonSRXControlMode.Velocity, 0);
   }
 
   public double getCoralSwitchEnc(){
-    return coralSwitchEnc.getPosition();
+    return coralPivot.getSelectedSensorPosition();
   }
 
   public void intake(double speed){ // speed = amount of voltage on motor
-    coralIntake.setVoltage(speed);
+    coralIntake.set(TalonSRXControlMode.Velocity, speed);
   }
 
   public void outtake(double speed){
-    coralIntake.setVoltage(-speed);
+    coralIntake.set(TalonSRXControlMode.Velocity, -speed);
   }
 
   public void stopCoralIntake(){
-    coralIntake.setVoltage(0);
-    coralIntake.stopMotor();
+    coralIntake.set(TalonSRXControlMode.Velocity, 0);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
   }
 }

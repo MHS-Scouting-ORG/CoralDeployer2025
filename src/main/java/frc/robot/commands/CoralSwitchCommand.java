@@ -27,17 +27,18 @@ public class CoralSwitchCommand extends Command {
       while (coralIntakeSub.getCoralSwitchEnc() >= -10) { 
           coralIntakeSub.coralSwitchDown(0.1);
       }
+      coralIntakeSub.stopCoralSwitch();
     } else if(coralIntakeSub.getCoralSwitchEnc() <= 5){
       while (coralIntakeSub.getCoralSwitchEnc() < 0) { 
           coralIntakeSub.coralSwitchUp(0.1);
       }
+    coralIntakeSub.stopCoralSwitch();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    coralIntakeSub.stopCoralSwitch();
   }
 
   // Returns true when the command should end.
