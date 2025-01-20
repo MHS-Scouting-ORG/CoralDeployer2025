@@ -42,10 +42,10 @@ public class RobotContainer {
     new JoystickButton(stick, 1).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
     new JoystickButton(stick, 2).whileTrue(new InstantCommand(() -> coralIntakeSub.outtake(2)));
     new JoystickButton(stick, 2).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
-    new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
-    new JoystickButton(stick, 4).whileTrue(new InstantCommand(() -> algaeIntakeSub.intake(0.1)));
+    //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
+  new JoystickButton(stick, 4).whileTrue(new InstantCommand(() -> algaeIntakeSub.startAlgaeIntake()));
     new JoystickButton(stick, 4).whileFalse(new InstantCommand(() -> algaeIntakeSub.stopAlgaeIntake()));
-    new JoystickButton(stick, 5).whileTrue(new InstantCommand(() -> algaeIntakeSub.outtake(0.1)));
+    new JoystickButton(stick, 5).whileTrue(new InstantCommand(() -> algaeIntakeSub.reverseAlgaeIntake()));
     new JoystickButton(stick, 5).whileFalse(new InstantCommand(() -> algaeIntakeSub.stopAlgaeIntake()));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)

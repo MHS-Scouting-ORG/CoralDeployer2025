@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -18,37 +20,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeIntakeSubsystem extends SubsystemBase {
   /** Creates a new AlgaeIntakeSubsystem. */
-  private SparkMax algaeIntake;
+  private TalonSRX algaeIntake;
 
-  private double algaeIntakeRPM;
-  private double algaeIntakePosition;
-
-  public AlgaeIntakeSubsystem() {
-    algaeIntake = new SparkMax(0, MotorType.kBrushless);
-
-      configureSparkMAX(algaeIntake, Constants.ALGAE_INTAKE_INVERT);
-
-      SmartDashboard.putNumber("Algae Intake Speed", algaeIntake.get());
-  }
-  private void configureSparkMAX(SparkMax max, boolean reverse) {
-		SparkMaxConfig config = new SparkMaxConfig();
-    config.inverted(reverse).idleMode(IdleMode.kBrake);
-    max.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-  public void intake(double speed){ // speed = amount of voltage on motor
-    algaeIntake.set(speed);
+  public AlgaeIntakeSubsystem(){
+    algaeIntake = new TalonSRX(0);
   }
 
-  public void outtake(double speed){
-    algaeIntake.set(-speed);
+  public void startAlgaeIntake(){
+    algaeIntake.set(TalonSRXControlMode.Velocity, 0.5);
   }
 
   public void stopAlgaeIntake(){
-    algaeIntake.set(0);
-    algaeIntake.stopMotor();
+    algaeIntake.set(TalonSRXControlMode.Velocity, 0);
   }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void reverseAlgaeIntake(){
+    algaeIntake.set(TalonSRXControlMode.Velocity, -0.5);
   }
+  
+
+
+
+
+
 }
+
+ 
