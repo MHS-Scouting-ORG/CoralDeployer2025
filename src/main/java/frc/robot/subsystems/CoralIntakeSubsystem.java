@@ -12,7 +12,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   private final TalonSRX coralPivot;
 
   public CoralIntakeSubsystem() {
-    coralIntake = new TalonSRX(9);
+    coralIntake = new TalonSRX(3);
     coralPivot = new TalonSRX(1);
   }
 
