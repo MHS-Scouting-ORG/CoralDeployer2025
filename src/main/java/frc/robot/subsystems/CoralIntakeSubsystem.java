@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.RelativeEncoder;
@@ -10,10 +12,22 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   
   private final TalonSRX coralIntake;
   private final TalonSRX coralPivot;
+  private boolean pidStatus;
 
   public CoralIntakeSubsystem() {
+    pidStatus = false;
+
     coralIntake = new TalonSRX(3);
     coralPivot = new TalonSRX(1);
+
+    coralIntake.setNeutralMode(NeutralMode.Brake);
+    coralPivot.setNeutralMode(NeutralMode.Brake);
+
+    coralIntake.neutralOutput();
+    coralPivot.neutralOutput();
+
+    coralPivot.configSelectedFeedbackSensor(FeedbackDevice.Analog);
+    coralPivot.config_kD(0, getCoralSwitchEnc());
   }
 
   public void coralSwitchUp(double speed){
@@ -46,6 +60,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    if(pidStatus == true){
+
+    }
   }
 }
