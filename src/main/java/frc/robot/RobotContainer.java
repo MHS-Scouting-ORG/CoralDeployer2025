@@ -38,9 +38,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(stick, 1).whileTrue(new InstantCommand(() -> coralIntakeSub.intake(2)));
+    new JoystickButton(stick, 1).whileTrue(new InstantCommand(() -> coralIntakeSub.intake(0.1)));
     new JoystickButton(stick, 1).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
-    new JoystickButton(stick, 2).whileTrue(new InstantCommand(() -> coralIntakeSub.outtake(2)));
+    new JoystickButton(stick, 2).whileTrue(new InstantCommand(() -> coralIntakeSub.outtake(0.1)));
     new JoystickButton(stick, 2).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   new JoystickButton(stick, 4).whileTrue(new InstantCommand(() -> algaeIntakeSub.startAlgaeIntake()));

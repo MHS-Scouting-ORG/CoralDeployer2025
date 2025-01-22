@@ -17,15 +17,15 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   public void coralSwitchUp(double speed){
-    coralPivot.set(TalonSRXControlMode.Velocity, speed);
+    coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
   public void coralSwitchDown(double speed){
-    coralPivot.set(TalonSRXControlMode.Velocity, -speed);
+    coralPivot.set(TalonSRXControlMode.PercentOutput, -speed);
   }
 
   public void stopCoralSwitch(){
-    coralPivot.set(TalonSRXControlMode.Velocity, 0);
+    coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
   }
 
   public double getCoralSwitchEnc(){
@@ -33,15 +33,15 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   public void intake(double speed){ // speed = amount of voltage on motor
-    coralIntake.set(TalonSRXControlMode.Velocity, speed);
+    coralIntake.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
   public void outtake(double speed){
-    coralIntake.set(TalonSRXControlMode.Velocity, -speed);
+    coralIntake.set(TalonSRXControlMode.PercentOutput, -speed);
   }
 
   public void stopCoralIntake(){
-    coralIntake.set(TalonSRXControlMode.Velocity, 0);
+    coralIntake.set(TalonSRXControlMode.PercentOutput, 0);
   }
 
   @Override
