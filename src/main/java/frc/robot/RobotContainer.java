@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgaeRestingPosition;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CoralSwitchCommand;
 import frc.robot.commands.ExampleCommand;
@@ -25,6 +26,7 @@ public class RobotContainer {
   private final CoralSwitchCommand coralSwitchCmd = new CoralSwitchCommand(coralIntakeSub);
   private final Joystick stick = new Joystick(0);
   private final AlgaeIntakeSubsystem algaeIntakeSub = new AlgaeIntakeSubsystem();
+  private final AlgaeRestingPosition algaeRestingPositionCmd = new AlgaeRestingPosition(algaeIntakeSub);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -47,6 +49,8 @@ public class RobotContainer {
     new JoystickButton(stick, 4).whileFalse(new InstantCommand(() -> algaeIntakeSub.stopAlgaeIntake()));
     new JoystickButton(stick, 5).whileTrue(new InstantCommand(() -> algaeIntakeSub.reverseAlgaeIntake()));
     new JoystickButton(stick, 5).whileFalse(new InstantCommand(() -> algaeIntakeSub.stopAlgaeIntake()));
+    new JoystickButton (stick, 6).onTrue(new AlgaeRestingPosition(algaeIntakeSub));
+    new JoystickButton(stick, 7).onTrue(new InstantCommand(() ->  algaeIntakeSub.resetEncoder()));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
