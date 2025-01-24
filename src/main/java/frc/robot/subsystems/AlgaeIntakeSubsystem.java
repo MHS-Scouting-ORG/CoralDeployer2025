@@ -20,67 +20,72 @@ import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 public class AlgaeIntakeSubsystem extends SubsystemBase {
   /** Creates a new AlgaeIntakeSubsystem. */
   private TalonFX algaeIntake;
   private PIDController pid;
   private double setpoint;
   private boolean pidOn = false;
-  
+  private double currentError;
+  private double prevError = 0;
 
-public AlgaeIntakeSubsystem(){
-  algaeIntake = new TalonFX(9);
-  pid = new PIDController(0.05, 0.001, 0);
-} 
-public void startAlgaeIntake(){
-  algaeIntake.set(0.5);
-}
-public void stopAlgaeIntake(){
-  algaeIntake.set(0);
-}
-public void reverseAlgaeIntake(){
-  algaeIntake.set(-0.5);
-}
-public double getEncoder(){
-  return algaeIntake.getPosition().getValueAsDouble();
-}
-public void resetEncoder(){
-  algaeIntake.setPosition(0);
-}
-public void setSetpoint(double newSetpoint){
-  setpoint = newSetpoint;
-}
-public boolean pidFinished(){
-  return pid.atSetpoint();
-}
-public void setpidOn(){
-  pidOn = true;
-}
-public void setpidOff(){
-  pidOn = false;
-}
-public void periodic(){
-  
-  
-  if (pidOn) {
+  public AlgaeIntakeSubsystem() {
+    algaeIntake = new TalonFX(9);
+    pid = new PIDController(0.01, 0.005, 0);
+  }
+
+  public void startAlgaeIntake() {
+    algaeIntake.set(0.5);
+  }
+
+  public void stopAlgaeIntake() {
+    algaeIntake.set(0);
+  }
+
+  public void reverseAlgaeIntake() {
+    algaeIntake.set(-0.5);
+  }
+
+  public double getEncoder() {
+    return algaeIntake.getPosition().getValueAsDouble();
+  }
+
+  public void resetEncoder() {
+    algaeIntake.setPosition(0);
+  }
+
+  public void setSetpoint(double newSetpoint) {
+    setpoint = newSetpoint;
+  }
+
+  public boolean pidFinished() {
+    return pid.atSetpoint();
+  }
+
+  public void setpidOn() {
+    pidOn = true;
+  }
+
+  public void setpidOff() {
+    pidOn = false;
+  }
+
+  public void periodic() {
+    currentError = setpoint - getEncoder();
+
+    if (currentError > 0 && prevError < 0) {
+      pid.reset();
+    } else if (currentError < 0 && prevError > 0) {
+      pid.reset();
+    }
+
+    prevError = currentError;
+
     double output = pid.calculate(getEncoder(), setpoint);
     algaeIntake.set(output);
+
+
+    SmartDashboard.putNumber("encoder", getEncoder());
+    SmartDashboard.putBoolean("pidON", pidOn);
   }
-  
-
-
-  SmartDashboard.putNumber("encoder", getEncoder());
-  SmartDashboard.putBoolean("pidON", pidOn);
 }
-
-
-  
-
-
-
-
-
-}
-
- 

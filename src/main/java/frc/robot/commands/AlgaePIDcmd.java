@@ -9,14 +9,15 @@ import frc.robot.subsystems.AlgaeIntakeSubsystem;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeRestingPosition extends Command {
+public class AlgaePIDcmd extends Command {
   /** Creates a new AlgaeIntakeCommand. */
   
 private AlgaeIntakeSubsystem algaeIntakeSub;
+private double desiredSetpoint;
 
 
-
-  public AlgaeRestingPosition(AlgaeIntakeSubsystem algaeIntakeSub) {
+  public AlgaePIDcmd(AlgaeIntakeSubsystem algaeIntakeSub, double desiredSetpoint) {
+    this.desiredSetpoint = desiredSetpoint;
     this.algaeIntakeSub = algaeIntakeSub;
     addRequirements(this.algaeIntakeSub);
   }
@@ -24,26 +25,25 @@ private AlgaeIntakeSubsystem algaeIntakeSub;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    algaeIntakeSub.setpidOn();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    algaeIntakeSub.setSetpoint(50);
+    algaeIntakeSub.setSetpoint(desiredSetpoint);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algaeIntakeSub.setpidOff();
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return algaeIntakeSub.pidFinished();
-    
+    return false;
   }
 }
