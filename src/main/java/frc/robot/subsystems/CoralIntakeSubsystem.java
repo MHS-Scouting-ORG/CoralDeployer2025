@@ -6,12 +6,14 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   
   private final TalonSRX coralIntake;
   private final TalonSRX coralPivot;
+  private final DigitalOutput opticalSensor;
   private boolean pidStatus;
 
   public CoralIntakeSubsystem() {
@@ -19,6 +21,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
     coralIntake = new TalonSRX(3);
     coralPivot = new TalonSRX(1);
+    opticalSensor = new DigitalOutput(9);
 
     coralIntake.setNeutralMode(NeutralMode.Brake);
     coralPivot.setNeutralMode(NeutralMode.Brake);
