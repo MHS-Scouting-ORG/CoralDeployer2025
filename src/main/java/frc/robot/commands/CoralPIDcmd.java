@@ -5,21 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.CoralIntakeSubsystem;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaePIDcmd extends Command {
+public class CoralPIDcmd extends Command {
   /** Creates a new AlgaeIntakeCommand. */
   
-private AlgaeIntakeSubsystem algaeIntakeSub;
+private CoralIntakeSubsystem coralIntakeSub;
 private double desiredSetpoint;
 
 
-  public AlgaePIDcmd(AlgaeIntakeSubsystem algaeIntakeSub, double desiredSetpoint) {
+  public CoralPIDcmd(CoralIntakeSubsystem coralIntakeSub, double desiredSetpoint) {
     this.desiredSetpoint = desiredSetpoint;
-    this.algaeIntakeSub = algaeIntakeSub;
-    addRequirements(this.algaeIntakeSub);
+    this.coralIntakeSub = coralIntakeSub;
+    addRequirements(this.coralIntakeSub);
   }
 
   // Called when the command is initially scheduled.
@@ -31,7 +31,7 @@ private double desiredSetpoint;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    algaeIntakeSub.setSetpoint(desiredSetpoint);
+    coralIntakeSub.setSetpoint(desiredSetpoint);
 
   }
 
