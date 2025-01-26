@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 
-public class CoralSwitchCommand extends Command {
+public class CoralPivotCommand extends Command {
 
   private CoralIntakeSubsystem coralIntakeSub;
 
-  public CoralSwitchCommand(CoralIntakeSubsystem coralIntakeSub) {
+  public CoralPivotCommand(CoralIntakeSubsystem coralIntakeSub) {
     this.coralIntakeSub = coralIntakeSub;
     addRequirements(this.coralIntakeSub);
   }
@@ -25,14 +25,14 @@ public class CoralSwitchCommand extends Command {
   public void execute() {
     if (coralIntakeSub.getCoralSwitchEnc() >= -5) {
       while (coralIntakeSub.getCoralSwitchEnc() >= -10) { 
-          coralIntakeSub.coralSwitchDown(0.1);
+          coralIntakeSub.coralPivotRight(0);
       }
-      coralIntakeSub.stopCoralSwitch();
+      coralIntakeSub.stopCoralPivot();
     } else if(coralIntakeSub.getCoralSwitchEnc() <= 5){
       while (coralIntakeSub.getCoralSwitchEnc() < 0) { 
-          coralIntakeSub.coralSwitchUp(0.1);
+          coralIntakeSub.coralPivotLeft(0);
       }
-    coralIntakeSub.stopCoralSwitch();
+    coralIntakeSub.stopCoralPivot();
     }
   }
 
