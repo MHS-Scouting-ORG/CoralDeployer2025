@@ -4,24 +4,24 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
-  
-  private final TalonSRX coralIntake;
-  private final TalonSRX coralPivot;
-  private final DigitalOutput opticalSensor;
+  private final TalonSRX coralIntake, coralPivot;
+  private final DigitalInput opticalSensor, leftLimitSwitch, rightLimitSwitch;
   private boolean pidStatus;
 
   public CoralIntakeSubsystem() {
     pidStatus = false;
 
-    coralIntake = new TalonSRX(3);
-    coralPivot = new TalonSRX(1);
-    opticalSensor = new DigitalOutput(9);
+    coralIntake = new TalonSRX(0);
+    coralPivot = new TalonSRX(12);
+    opticalSensor = new DigitalInput(0);
+    leftLimitSwitch = new DigitalInput(1);
+    rightLimitSwitch  = new DigitalInput(6);
 
     coralIntake.setNeutralMode(NeutralMode.Brake);
     coralPivot.setNeutralMode(NeutralMode.Brake);
@@ -33,15 +33,15 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     coralPivot.config_kD(0, getCoralSwitchEnc());
   }
 
-  public void coralSwitchUp(double speed){
+  public void coralPivotLeft(double speed){
     coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
-  public void coralSwitchDown(double speed){
+  public void coralPivotRight(double speed){
     coralPivot.set(TalonSRXControlMode.PercentOutput, -speed);
   }
 
-  public void stopCoralSwitch(){
+  public void stopCoralPivot(){
     coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
   }
 
@@ -49,11 +49,11 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     return coralPivot.getSelectedSensorPosition();
   }
 
-  public void intake(double speed){ // speed = amount of voltage on motor
+  public void coralIntake(double speed){ // speed = amount of voltage on motor
     coralIntake.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
-  public void outtake(double speed){
+  public void coralOuttake(double speed){
     coralIntake.set(TalonSRXControlMode.PercentOutput, -speed);
   }
 
@@ -61,10 +61,29 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     coralIntake.set(TalonSRXControlMode.PercentOutput, 0);
   }
 
+  public boolean getOpticalSensor(){
+    return opticalSensor.get();
+  }
+
+  public boolean getLeftLimitSwitch(){
+    return leftLimitSwitch.get();
+  }
+  
+  public boolean getRightLimitSwitch(){
+    return rightLimitSwitch.get();
+  }
+
+
   @Override
   public void periodic() {
     if(pidStatus == true){
-
     }
+    if(getLeftLimitSwitch()){
+      stopCoralPivot();
+    }
+    else if(getLeftLimitSwitch()){
+      stopCoralPivot();
+    }
+    SmartDashboard.putBoolean("opticalSensor", getOpticalSensor());
   }
 }
