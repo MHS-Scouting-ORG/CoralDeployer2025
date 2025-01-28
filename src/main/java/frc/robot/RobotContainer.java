@@ -22,7 +22,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-    
+      
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -32,11 +32,10 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new InstantCommand(() -> coralIntakeSub.coralIntake(0.1)));
-    new JoystickButton(xbox, XboxController.Button.kX.value).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
-    new JoystickButton(xbox,XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralIntakeSub.coralOuttake(0.1)));
-    new JoystickButton(xbox,XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralIntakeSub.stopCoralIntake()));
     new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> coralIntakeSub.setCoralPivotPIDSetpoint(0)));
+    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> coralIntakeSub.setCoralPivotPIDSetpoint(45)));
+    new JoystickButton(xbox, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> coralIntakeSub.setCoralPivotPIDSetpoint(-45)));
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }
  
