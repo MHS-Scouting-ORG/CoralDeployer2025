@@ -20,10 +20,10 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   public CoralIntakeSubsystem() {
     pidStatus = false;
 
-    coralIntake = new TalonSRX(0);
-    coralPivot = new TalonSRX(12);
-    opticalSensor = new DigitalInput(0);
-    leftLimitSwitch = new DigitalInput(1);
+    coralIntake = new TalonSRX(12);
+    coralPivot = new TalonSRX(0);
+    opticalSensor = new DigitalInput(1);
+    leftLimitSwitch = new DigitalInput(0);
     rightLimitSwitch = new DigitalInput(6);
 
     coralIntake.setNeutralMode(NeutralMode.Brake);
@@ -76,7 +76,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
     
 
-    // coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
+     coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
    // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
     
 
