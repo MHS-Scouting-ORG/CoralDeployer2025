@@ -25,14 +25,14 @@ public class CoralPivotCommand extends Command {
   public void execute() {
     if (coralIntakeSub.getCoralSwitchEnc() >= -5) {
       while (coralIntakeSub.getCoralSwitchEnc() >= -10) { 
-          coralIntakeSub.coralPivotRight(0);
+          //coralIntakeSub.coralPivotRight(0);
       }
-      coralIntakeSub.stopCoralPivot();
+      //coralIntakeSub.stopCoralPivot();
     } else if(coralIntakeSub.getCoralSwitchEnc() <= 5){
       while (coralIntakeSub.getCoralSwitchEnc() < 0) { 
-          coralIntakeSub.coralPivotLeft(0);
+          //coralIntakeSub.coralPivotLeft(0);
       }
-    coralIntakeSub.stopCoralPivot();
+    //coralIntakeSub.stopCoralPivot();
     }
   }
 
