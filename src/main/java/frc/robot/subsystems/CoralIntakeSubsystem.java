@@ -80,5 +80,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     
 
     SmartDashboard.putBoolean("opticalSensor", getOpticalSensor());
+    SmartDashboard.putBoolean("Limit Switch", getLeftLimitSwitch());
+    SmartDashboard.putNumber("Intake Pivot Enc", getCoralSwitchEnc());
   }
 }
