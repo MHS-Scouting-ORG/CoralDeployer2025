@@ -12,16 +12,19 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants { 
-   public static final double ALGAE_INTAKE_MAX_POWER = 0.1;
-    public static final double ALGAE_INTAKE_MIN_POWER = 0.05;
-    public static final double ALGAE_INTAKE_kP = 0.025;
-   
-   
-    
-    public static final double DEPLOY_SPEED = 0.1;
-    public static final boolean ALGAE_INTAKE_INVERT = false;
-    public static final double ALGAE_INTAKE_SPEED = 0.8;
+public final class Constants {
+
+    // Speeds
+    public static final double CORAL_INTAKE_SPEED = 0.8;
+    public static final double CORAL_OUTTAKE_SPEED = 0.8;
+    public static final double CORAL_PIVOT_SPEED = 0.8;
+
+    // IDs
+    public static final int CORAL_INTAKE_ID = 12;
+    public static final int CORAL_PIVOT_ID = 0;
+    public static final int CORAL_LIMIT_SWITCH_ID = 0;
+    public static final int CORAL_OPTICAL_SENSOR_ID = 1;
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
    

@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   private final TalonSRX coralIntake, coralPivot;
@@ -20,10 +21,10 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   public CoralIntakeSubsystem() {
     pidStatus = false;
 
-    coralIntake = new TalonSRX(12);
-    coralPivot = new TalonSRX(0);
-    opticalSensor = new DigitalInput(1);
-    leftLimitSwitch = new DigitalInput(0);
+    coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
+    coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
+    opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
+    leftLimitSwitch = new DigitalInput(Constants.CORAL_LIMIT_SWITCH_ID);
     rightLimitSwitch = new DigitalInput(6);
 
     coralIntake.setNeutralMode(NeutralMode.Brake);
@@ -73,8 +74,6 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     } else if (pivotSpeed > 0 && getRightLimitSwitch()) {
       pivotSpeed = 0;
     }
-
-    
 
      coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
    // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
