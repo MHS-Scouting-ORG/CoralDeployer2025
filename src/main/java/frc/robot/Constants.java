@@ -16,14 +16,15 @@ public final class Constants {
 
     // Speeds
     public static final double CORAL_INTAKE_SPEED = 0.8;
-    public static final double CORAL_OUTTAKE_SPEED = 0.8;
-    public static final double CORAL_PIVOT_SPEED = 0.8;
+    public static final double CORAL_DEPLOY_SPEED = 0.4;
+    public static final double CORAL_OUTTAKE_SPEED = 0.2;
+    public static final double CORAL_PIVOT_SPEED = 0.1;
 
     // IDs
     public static final int CORAL_INTAKE_ID = 12;
-    public static final int CORAL_PIVOT_ID = 0;
+    public static final int CORAL_PIVOT_ID = 11;
     public static final int CORAL_LIMIT_SWITCH_ID = 0;
-    public static final int CORAL_OPTICAL_SENSOR_ID = 1;
+    public static final int CORAL_OPTICAL_SENSOR_ID = 2;
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
