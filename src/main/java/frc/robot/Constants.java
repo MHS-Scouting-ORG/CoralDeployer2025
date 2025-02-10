@@ -22,7 +22,7 @@ public final class Constants {
 
     // IDs
     public static final int CORAL_INTAKE_ID = 12;
-    public static final int CORAL_PIVOT_ID = 11;
+    public static final int CORAL_PIVOT_ID = 14;
     public static final int CORAL_LIMIT_SWITCH_ID = 0;
     public static final int CORAL_OPTICAL_SENSOR_ID = 2;
 

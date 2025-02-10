@@ -12,20 +12,21 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
+
   private final TalonSRX coralIntake, coralPivot;
   private final DigitalInput opticalSensor, limitSwitch;
   private PIDController pivotPIDController;
   private int setpoint;
-  private boolean pidStatus;
+  private boolean pidStatus = false;
 
   public CoralIntakeSubsystem() {
+
     coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
     limitSwitch = new DigitalInput(Constants.CORAL_LIMIT_SWITCH_ID);
     pivotPIDController = new PIDController(0.1, 0, 0);
     pivotPIDController.setTolerance(50);
-    pidStatus = false;
 
     coralIntake.setInverted(true);
     coralIntake.setNeutralMode(NeutralMode.Brake);
@@ -36,74 +37,82 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     coralPivot.configSelectedFeedbackSensor(FeedbackDevice.Analog);
   }
 
-  public double getCoralSwitchEnc() {
-    return coralPivot.getSensorCollection().getQuadraturePosition();
-  }
-
   public void resetPivotEnc(){
     coralPivot.getSensorCollection().setQuadraturePosition(0, 0);
   }
 
-  public boolean getOpticalSensor() {
-    return opticalSensor.get();
-  }
-
-  public boolean atSetpoint(){
-    return coralPivot.getSensorCollection().getQuadraturePosition() == setpoint;
-  }
-
+  // set Coral Pivot speed to speed
   public void setPivotSpeed(double speed) {
     coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
+  // set Coral Intake sped to speed
   public void setIntakeSpeed(double speed) {
     coralIntake.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
-  public boolean getPIDStatus(){
-    return pidStatus;
-  }
-
+  // set Coral PIDstatus to stat
   public void setPIDStatus(boolean stat){
     pidStatus = stat;
   }
 
+  // set Coral PID setpoint to setpoint
   public void setCoralPivotPIDSetpoint(int setpoint){
-    setpoint = this.setpoint;
+    this.setpoint = setpoint;
   }
 
+  // return Coral Encoder
+  public double getCoralSwitchEnc() {
+    return coralPivot.getSelectedSensorPosition();
+  }
+
+  // return current value of PID status
+  public boolean getPIDStatus(){
+    return pidStatus;
+  }
+
+  // return current value of Limit Switch
   public boolean getLimitSwitch() {
     return !limitSwitch.get();
+  }
+
+  // return current value of Optical Switch
+  public boolean getOpticalSensor() {
+    return opticalSensor.get();
+  }
+
+  // return true if at setpoint
+  public boolean atSetpoint(){
+    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 200) && 
+    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 200);
   }
 
   @Override
   public void periodic() {
 
-
-    if(getLimitSwitch()){
+    /*if(getLimitSwitch()){
       resetPivotEnc();
-    }
+    }*/
 
     if(pidStatus){
-      double error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint);
+      double error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/1000;
       if(error > Constants.CORAL_PIVOT_SPEED){
         error = Constants.CORAL_PIVOT_SPEED;
-      }else if(error < -Constants.CORAL_PIVOT_ID){
+      }else if(error < -Constants.CORAL_PIVOT_SPEED){
         error = -Constants.CORAL_PIVOT_SPEED;
       }
 
       setPivotSpeed(error);
     }
 
-     //coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
-   // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
-    
-
     SmartDashboard.putBoolean("opticalSensor", getOpticalSensor());
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
     SmartDashboard.putNumber("Intake Pivot Enc", getCoralSwitchEnc());
-    SmartDashboard.putNumber("Pivot PID Error", pivotPIDController.calculate(getCoralSwitchEnc(), setpoint));
+    SmartDashboard.putNumber("Pivot PID Error", pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/1000);
     SmartDashboard.putNumber("Setpoint", setpoint);
     SmartDashboard.putBoolean("PID Status", pidStatus);
+
+  //coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
+  // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
   }
 }

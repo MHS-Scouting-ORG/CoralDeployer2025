@@ -9,8 +9,8 @@ import frc.robot.subsystems.CoralIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class PivotRightCommand extends Command {
+  /** Creates a new PivotLeftCommand. */
   private CoralIntakeSubsystem coralSub;
-  /** Creates a new PivotRightCommand. */
   public PivotRightCommand(CoralIntakeSubsystem coralSub) {
     this.coralSub = coralSub;
     addRequirements(coralSub);
@@ -21,7 +21,7 @@ public class PivotRightCommand extends Command {
   @Override
   public void initialize() {
     coralSub.setPIDStatus(true);
-    coralSub.setCoralPivotPIDSetpoint(-600);
+    coralSub.setCoralPivotPIDSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +31,6 @@ public class PivotRightCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    coralSub.setPIDStatus(false);
     coralSub.setPivotSpeed(0);
   }
 

@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CoralIntakeCommand;
+import frc.robot.commands.CoralDeployerCommand;
 import frc.robot.commands.PivotLeftCommand;
 import frc.robot.commands.PivotRightCommand;
 import frc.robot.subsystems.CoralIntakeSubsystem;
-import frc.robot.commands.CoralDeployerCommand;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
