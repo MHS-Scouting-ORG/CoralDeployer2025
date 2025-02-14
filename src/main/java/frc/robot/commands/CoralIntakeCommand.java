@@ -18,6 +18,8 @@ public class CoralIntakeCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+      coralIntakeSub.setPIDStatus(true);
+      coralIntakeSub.setCoralPivotPIDSetpoint(-300);
       coralIntakeSub.setIntakeSpeed(Constants.CORAL_INTAKE_SPEED);
       timer.reset();
     }
@@ -35,6 +37,7 @@ public class CoralIntakeCommand extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+      coralIntakeSub.setPIDStatus(false);
       coralIntakeSub.setIntakeSpeed(0);
       timer.stop();
     }

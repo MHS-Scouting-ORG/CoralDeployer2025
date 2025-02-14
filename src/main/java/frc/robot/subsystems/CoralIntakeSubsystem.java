@@ -48,6 +48,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
     if(coralPivot.getSensorCollection().getQuadraturePosition()<= -600 && speed < 0){
       coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
+    } else if (coralPivot.getSensorCollection().getQuadraturePosition() >=-50 && speed > 0){
+      coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
     }
   }
 
@@ -88,8 +90,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return true if at setpoint
   public boolean atSetpoint(){
-    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 20) && 
-    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 20);
+    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 50) && 
+    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 50);
   }
 
   @Override
@@ -101,9 +103,9 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
     if(pidStatus){
       double error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/200;
-      if(error > Constants.CORAL_PIVOT_SPEED){
+      if(error > Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
         error = Constants.CORAL_PIVOT_SPEED;
-      }else if(error < -Constants.CORAL_PIVOT_SPEED){
+      }else if(error < -Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
         error = -Constants.CORAL_PIVOT_SPEED;
       }
 

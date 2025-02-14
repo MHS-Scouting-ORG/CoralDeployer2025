@@ -35,14 +35,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
-    new JoystickButton(xbox, XboxController.Button.kB.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
+    //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
+    //new JoystickButton(xbox, XboxController.Button.kB.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
     new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(-Constants.CORAL_PIVOT_SPEED)));
     new JoystickButton(xbox, XboxController.Button.kX.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(Constants.CORAL_PIVOT_SPEED)));
     new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
-    //new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new PivotRightCommand(coralIntakeSub));
-    //new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new PivotLeftCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new PivotRightCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new PivotLeftCommand(coralIntakeSub));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }
