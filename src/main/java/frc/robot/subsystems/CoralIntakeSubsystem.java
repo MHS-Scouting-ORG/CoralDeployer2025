@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -25,16 +27,16 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
     limitSwitch = new DigitalInput(Constants.CORAL_LIMIT_SWITCH_ID);
+    coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
     pivotPIDController = new PIDController(0.1, 0, 0);
     pivotPIDController.setTolerance(50);
+
+    coralIntake.configFactoryDefault();
+    coralPivot.configFactoryDefault();
 
     coralIntake.setInverted(true);
     coralIntake.setNeutralMode(NeutralMode.Brake);
     coralPivot.setNeutralMode(NeutralMode.Brake);
-
-    coralIntake.neutralOutput();
-    coralPivot.neutralOutput();
-    coralPivot.configSelectedFeedbackSensor(FeedbackDevice.Analog);
   }
 
   public void resetPivotEnc(){
@@ -44,6 +46,9 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   // set Coral Pivot speed to speed
   public void setPivotSpeed(double speed) {
     coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
+    if(coralPivot.getSensorCollection().getQuadraturePosition()<= -600 && speed < 0){
+      coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
+    }
   }
 
   // set Coral Intake sped to speed
@@ -63,7 +68,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return Coral Encoder
   public double getCoralSwitchEnc() {
-    return coralPivot.getSelectedSensorPosition();
+    return coralPivot.getSensorCollection().getQuadraturePosition();
   }
 
   // return current value of PID status
@@ -73,7 +78,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return current value of Limit Switch
   public boolean getLimitSwitch() {
-    return !limitSwitch.get();
+    return coralIntake.isFwdLimitSwitchClosed() == 1 ? true : false;
   }
 
   // return current value of Optical Switch
@@ -83,19 +88,19 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return true if at setpoint
   public boolean atSetpoint(){
-    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 200) && 
-    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 200);
+    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 20) && 
+    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 20);
   }
 
   @Override
   public void periodic() {
 
-    /*if(getLimitSwitch()){
+    if(getLimitSwitch()){
       resetPivotEnc();
-    }*/
+    }
 
     if(pidStatus){
-      double error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/1000;
+      double error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/200;
       if(error > Constants.CORAL_PIVOT_SPEED){
         error = Constants.CORAL_PIVOT_SPEED;
       }else if(error < -Constants.CORAL_PIVOT_SPEED){
@@ -105,10 +110,10 @@ public class CoralIntakeSubsystem extends SubsystemBase {
       setPivotSpeed(error);
     }
 
-    SmartDashboard.putBoolean("opticalSensor", getOpticalSensor());
+    SmartDashboard.putBoolean("Optical Sensor", getOpticalSensor());
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
     SmartDashboard.putNumber("Intake Pivot Enc", getCoralSwitchEnc());
-    SmartDashboard.putNumber("Pivot PID Error", pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/1000);
+    SmartDashboard.putNumber("Pivot PID Error", pivotPIDController.calculate(getCoralSwitchEnc(), setpoint)/200);
     SmartDashboard.putNumber("Setpoint", setpoint);
     SmartDashboard.putBoolean("PID Status", pidStatus);
 
