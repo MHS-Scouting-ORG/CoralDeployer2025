@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PivotRightCommand extends Command {
-  /** Creates a new PivotLeftCommand. */
+public class PivotMiddleCommand extends Command {
+  /** Creates a new PivotMiddleCommand. */
   private CoralIntakeSubsystem coralSub;
-  public PivotRightCommand(CoralIntakeSubsystem coralSub) {
+  public PivotMiddleCommand(CoralIntakeSubsystem coralSub) {
     this.coralSub = coralSub;
     addRequirements(this.coralSub);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -21,7 +21,7 @@ public class PivotRightCommand extends Command {
   @Override
   public void initialize() {
     coralSub.setPIDStatus(true);
-    coralSub.setCoralPivotPIDSetpoint(0);
+    coralSub.setCoralPivotPIDSetpoint(-340);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

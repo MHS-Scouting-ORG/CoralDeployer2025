@@ -24,15 +24,13 @@ public class PivotLeftCommand extends Command {
     coralSub.setCoralPivotPIDSetpoint(-600);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Called every time the scheduler runs while theS command is scheduled.
   @Override
   public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    coralSub.setPivotSpeed(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
