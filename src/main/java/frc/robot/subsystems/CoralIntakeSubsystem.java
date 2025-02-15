@@ -28,7 +28,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
     limitSwitch = new DigitalInput(Constants.CORAL_LIMIT_SWITCH_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
-    pivotPIDController = new PIDController(0.0006,0, 0);
+    pivotPIDController = new PIDController(0.0007,0, 0);
     pivotPIDController.setTolerance(25);
 
     coralIntake.configFactoryDefault();
