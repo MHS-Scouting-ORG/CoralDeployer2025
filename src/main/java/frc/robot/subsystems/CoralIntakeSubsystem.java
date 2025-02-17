@@ -16,7 +16,7 @@ import frc.robot.Constants;
 public class CoralIntakeSubsystem extends SubsystemBase {
 
   private final TalonSRX coralIntake, coralPivot;
-  private final DigitalInput opticalSensor, limitSwitch;
+  private final DigitalInput opticalSensor;
   private PIDController pivotPIDController;
   private int setpoint;
   private boolean pidStatus = false;
@@ -26,7 +26,6 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
-    limitSwitch = new DigitalInput(Constants.CORAL_LIMIT_SWITCH_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
     pivotPIDController = new PIDController(0.0007,0, 0);
     pivotPIDController.setTolerance(25);
