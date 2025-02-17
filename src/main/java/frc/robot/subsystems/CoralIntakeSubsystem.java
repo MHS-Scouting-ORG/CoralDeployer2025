@@ -90,8 +90,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return true if at setpoint
   public boolean atSetpoint(){
-    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 20) && 
-    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 20);
+    return (coralPivot.getSensorCollection().getQuadraturePosition() >= setpoint - 10) && 
+    (coralPivot.getSensorCollection().getQuadraturePosition() <= setpoint + 10);
   }
 
   @Override
