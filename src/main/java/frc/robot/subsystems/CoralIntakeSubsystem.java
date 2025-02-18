@@ -79,7 +79,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return current value of Limit Switch
   public boolean getLimitSwitch() {
-    return coralIntake.isFwdLimitSwitchClosed() == 1 ? true : false;
+    return coralIntake.isFwdLimitSwitchClosed() == 1;
   }
 
   // return current value of Optical Switch
