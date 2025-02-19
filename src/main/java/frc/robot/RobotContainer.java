@@ -16,10 +16,12 @@ import frc.robot.commands.CoralDeployerCommand;
 import frc.robot.commands.PivotLeftCommand;
 import frc.robot.commands.PivotMiddleCommand;
 import frc.robot.commands.PivotRightCommand;
+import frc.robot.subsystems.CoralPivotSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem();
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final Joystick stick = new Joystick(0);
   private final XboxController xbox = new XboxController(0);
@@ -36,15 +38,15 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new CoralIntakeCommand(coralIntakeSub, coralPivotSub));
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
     //new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(-Constants.CORAL_PIVOT_SPEED)));
     //new JoystickButton(xbox, XboxController.Button.kX.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
     //new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(Constants.CORAL_PIVOT_SPEED)));
     //new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
-    new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new PivotRightCommand(coralIntakeSub));
-    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new PivotLeftCommand(coralIntakeSub));
-    new JoystickButton(xbox, XboxController.Button.kX.value).onTrue(new PivotMiddleCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new PivotRightCommand(coralPivotSub));
+    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new PivotLeftCommand(coralPivotSub));
+    new JoystickButton(xbox, XboxController.Button.kX.value).onTrue(new PivotMiddleCommand(coralPivotSub));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }
