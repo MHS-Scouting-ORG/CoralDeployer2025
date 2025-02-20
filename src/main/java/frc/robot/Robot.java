@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     coralInnitCommand = m_robotContainer.coralInnit();
+    coralSetpointCommand = m_robotContainer.coralSetpoint();
   }
 
   /**

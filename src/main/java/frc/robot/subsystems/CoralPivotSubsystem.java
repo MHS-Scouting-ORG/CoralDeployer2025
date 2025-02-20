@@ -24,7 +24,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
     coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
-    pivotPIDController = new PIDController(0.0007,0.0001, 0);
+    pivotPIDController = new PIDController(0.0006,0.0001, 0);
     pivotPIDController.setTolerance(25);
     pidStatus = false;
 
@@ -66,6 +66,10 @@ public class CoralPivotSubsystem extends SubsystemBase {
     return coralPivot.getSensorCollection().getQuadraturePosition();
   }
 
+  public double getSetpoint(){
+    return setpoint;
+  }
+
   // return current value of PID status
   public boolean getPIDStatus(){
     return pidStatus;
@@ -85,17 +89,10 @@ public class CoralPivotSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if(getPIDStatus()){
-      if(error < 0 && prevError > 0){
-        pivotPIDController.reset();
-      } else if(error > 0 && prevError < 0){
-        pivotPIDController.reset();
-      }
-    }
-
     if(getLimitSwitch()){
       resetPivotEnc();
     }
+
 
     if(getPIDStatus()){
       error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint);
@@ -105,15 +102,27 @@ public class CoralPivotSubsystem extends SubsystemBase {
         error = -Constants.CORAL_PIVOT_SPEED;
       }
 
-      setPivotSpeed(error);
+      if(error < 0 && prevError > 0){
+        pivotPIDController.reset();
+      } else if(error > 0 && prevError < 0){
+        pivotPIDController.reset();
+      }
+
       prevError = error;
     }
 
+    if(atSetpoint()){
+      error = 0;
+    }
+
+    setPivotSpeed(error);
+
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
     SmartDashboard.putNumber("Intake Pivot Enc", getCoralSwitchEnc());
-    SmartDashboard.putNumber("Pivot PID Error", pivotPIDController.calculate(getCoralSwitchEnc(), setpoint));
+    SmartDashboard.putNumber("Pivot PID Error", error);
     SmartDashboard.putNumber("Setpoint", setpoint);
     SmartDashboard.putBoolean("PID Status", pidStatus);
+    SmartDashboard.putBoolean("At Setpoint", atSetpoint());
 
   //coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
   // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
