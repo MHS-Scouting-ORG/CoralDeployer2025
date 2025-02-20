@@ -28,6 +28,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
     pivotPIDController = new PIDController(0.0006,0.0001, 0);
     pivotPIDController.setTolerance(3);
     pidStatus = false;
+    coralTimer = new Timer();
     coralTimeout = 0.2;
 
     coralIntake.configFactoryDefault();
