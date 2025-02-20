@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CoralPivotSubsystem;
 
@@ -12,10 +11,8 @@ import frc.robot.subsystems.CoralPivotSubsystem;
 public class PivotRightCommand extends Command {
   /** Creates a new PivotLeftCommand. */
   private CoralPivotSubsystem coralPivotSub;
-  private Timer timer;
   public PivotRightCommand(CoralPivotSubsystem coralPivotSub) {
     this.coralPivotSub = coralPivotSub;
-    timer = new Timer();
     addRequirements(this.coralPivotSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,7 +20,6 @@ public class PivotRightCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
     coralPivotSub.setPIDStatus(true);
   }
 
@@ -36,7 +32,6 @@ public class PivotRightCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    timer.stop();
   }
 
   // Returns true when the command should end.

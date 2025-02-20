@@ -5,8 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
@@ -18,6 +17,8 @@ public class CoralPivotSubsystem extends SubsystemBase {
   private PIDController pivotPIDController;
   private double setpoint, error, prevError;
   private boolean pidStatus;
+  private Timer coralTimer;
+  private final double coralTimeout;
 
   public CoralPivotSubsystem() {
 
@@ -25,8 +26,9 @@ public class CoralPivotSubsystem extends SubsystemBase {
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
     pivotPIDController = new PIDController(0.0006,0.0001, 0);
-    pivotPIDController.setTolerance(25);
+    pivotPIDController.setTolerance(3);
     pidStatus = false;
+    coralTimeout = 0.2;
 
     coralIntake.configFactoryDefault();
     coralPivot.configFactoryDefault();
@@ -43,11 +45,11 @@ public class CoralPivotSubsystem extends SubsystemBase {
   // set Coral Pivot speed to speed
   public void setPivotSpeed(double speed) {
     coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
-    if(coralPivot.getSensorCollection().getQuadraturePosition()<= -600 && speed < 0){
+    /*(coralPivot.getSensorCollection().getQuadraturePosition()<= -600 && speed < 0){
       coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
     } else if (coralPivot.getSensorCollection().getQuadraturePosition() >=-50 && speed > 0){
       coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
-    }
+    }*/
   }
 
 
@@ -58,7 +60,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   // set Coral PID setpoint to setpoint
   public void setCoralPivotPIDSetpoint(double setpoint){
-    this.setpoint = setpoint;
+    pivotPIDController.setSetpoint(setpoint);
   }
 
   // return Coral Encoder
@@ -67,7 +69,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
   }
 
   public double getSetpoint(){
-    return setpoint;
+    return pivotPIDController.getSetpoint();
   }
 
   // return current value of PID status
@@ -83,7 +85,18 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   // return true if at setpoint
   public boolean atSetpoint(){
-    return pivotPIDController.atSetpoint();
+    if(!pivotPIDController.atSetpoint()){
+      coralTimer.stop();
+      coralTimer.reset();
+      return false;
+    }
+    if(!coralTimer.isRunning()){
+      coralTimer.start();
+    }
+    if(coralTimer.get() >= coralTimeout){
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -95,7 +108,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
 
     if(getPIDStatus()){
-      error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint);
+      error = pivotPIDController.calculate(getCoralSwitchEnc(), getSetpoint());
       if(error > Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
         error = Constants.CORAL_PIVOT_SPEED;
       }else if(error < -Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
@@ -121,8 +134,9 @@ public class CoralPivotSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Intake Pivot Enc", getCoralSwitchEnc());
     SmartDashboard.putNumber("Pivot PID Error", error);
     SmartDashboard.putNumber("Setpoint", setpoint);
-    SmartDashboard.putBoolean("PID Status", pidStatus);
+    SmartDashboard.putBoolean("PID Status", getPIDStatus());
     SmartDashboard.putBoolean("At Setpoint", atSetpoint());
+    SmartDashboard.putNumber("Coral Timer", coralTimer.get());
 
   //coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
   // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
