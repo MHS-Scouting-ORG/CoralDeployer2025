@@ -16,16 +16,17 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   private final TalonSRX coralIntake, coralPivot;
   private PIDController pivotPIDController;
-  private int setpoint;
-  private boolean pidStatus = false;
+  private double setpoint, error, prevError;
+  private boolean pidStatus;
 
   public CoralPivotSubsystem() {
 
     coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
-    pivotPIDController = new PIDController(0.0007,0, 0);
+    pivotPIDController = new PIDController(0.0007,0.0001, 0);
     pivotPIDController.setTolerance(25);
+    pidStatus = false;
 
     coralIntake.configFactoryDefault();
     coralPivot.configFactoryDefault();
@@ -56,7 +57,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
   }
 
   // set Coral PID setpoint to setpoint
-  public void setCoralPivotPIDSetpoint(int setpoint){
+  public void setCoralPivotPIDSetpoint(double setpoint){
     this.setpoint = setpoint;
   }
 
@@ -84,12 +85,20 @@ public class CoralPivotSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
+    if(getPIDStatus()){
+      if(error < 0 && prevError > 0){
+        pivotPIDController.reset();
+      } else if(error > 0 && prevError < 0){
+        pivotPIDController.reset();
+      }
+    }
+
     if(getLimitSwitch()){
       resetPivotEnc();
     }
 
-    if(pidStatus){
-      double error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint);
+    if(getPIDStatus()){
+      error = pivotPIDController.calculate(getCoralSwitchEnc(), setpoint);
       if(error > Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
         error = Constants.CORAL_PIVOT_SPEED;
       }else if(error < -Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
@@ -97,6 +106,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
       }
 
       setPivotSpeed(error);
+      prevError = error;
     }
 
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());

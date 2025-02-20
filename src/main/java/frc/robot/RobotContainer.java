@@ -25,6 +25,8 @@ public class RobotContainer {
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final Joystick stick = new Joystick(0);
   private final XboxController xbox = new XboxController(0);
+  private final Command coralInnit = new InstantCommand(()->coralPivotSub.setPIDStatus(false));
+  private final Command coralSetpoint = new InstantCommand(()-> coralPivotSub.setCoralPivotPIDSetpoint(coralPivotSub.getCoralSwitchEnc()));  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -59,5 +61,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;
+
 }
+  public Command coralInnit(){
+    return coralInnit();
+  }
+  
 }
