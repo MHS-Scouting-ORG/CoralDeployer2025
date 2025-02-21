@@ -69,6 +69,42 @@ public class CoralPivotSubsystem extends SubsystemBase {
     pivotPIDController.setSetpoint(setpoint);
   }
 
+  public void pivotMiddleToLeft(){
+    int count = 0;
+    if(getCoralSwitchEnc() < - 300){
+      if(count == 0){
+        setCoralPivotPIDSetpoint(-380);
+        if(atSetpoint()){
+          count++;
+        }
+      }
+      if(count == 1){
+        setCoralPivotPIDSetpoint(-75);
+        if(atSetpoint()){
+          count++;
+        }
+      }
+    }
+  }
+  
+  public void pivotMiddleToRight(){
+    int count = 0;
+    if(getCoralSwitchEnc() > -400){
+      if(count == 0){
+        setCoralPivotPIDSetpoint(-380);
+        if(atSetpoint()){
+          count++;
+        }
+      }
+      if(count == 1){
+        setCoralPivotPIDSetpoint(-673);
+        if(atSetpoint()){
+          count++;
+        }
+      }
+    }
+  }
+
   // return Coral Encoder
   public double getCoralSwitchEnc() {
     return coralPivot.getSensorCollection().getQuadraturePosition();
