@@ -15,8 +15,8 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   private final TalonSRX coralIntake, coralPivot;
   private PIDController pivotPIDController;
-  private double setpoint, error, prevError;
-  private boolean pidStatus;
+  private double error, prevError;
+  private boolean pidStatus, atSetpointVal;
   private Timer coralTimer;
   private final double coralTimeout;
 
@@ -24,12 +24,14 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
-    coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
-    pivotPIDController = new PIDController(0.0006,0.0001, 0);
-    pivotPIDController.setTolerance(3);
+    coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen,
+        Constants.CORAL_INTAKE_ID);
+    pivotPIDController = new PIDController(0.0006, 0.0001, 0);
+    pivotPIDController.setTolerance(20);
     pidStatus = false;
+    atSetpointVal = false;
     coralTimer = new Timer();
-    coralTimeout = 0.2;
+    coralTimeout = 0.125;
 
     coralIntake.configFactoryDefault();
     coralPivot.configFactoryDefault();
@@ -39,28 +41,31 @@ public class CoralPivotSubsystem extends SubsystemBase {
     coralPivot.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void resetPivotEnc(){
+  public void resetPivotEnc() {
     coralPivot.getSensorCollection().setQuadraturePosition(0, 0);
   }
 
   // set Coral Pivot speed to speed
   public void setPivotSpeed(double speed) {
     coralPivot.set(TalonSRXControlMode.PercentOutput, speed);
-    /*(coralPivot.getSensorCollection().getQuadraturePosition()<= -600 && speed < 0){
-      coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
-    } else if (coralPivot.getSensorCollection().getQuadraturePosition() >=-50 && speed > 0){
-      coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
-    }*/
+    /*
+     * (coralPivot.getSensorCollection().getQuadraturePosition()<= -600 && speed <
+     * 0){
+     * coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
+     * } else if (coralPivot.getSensorCollection().getQuadraturePosition() >=-50 &&
+     * speed > 0){
+     * coralPivot.set(TalonSRXControlMode.PercentOutput, 0);
+     * }
+     */
   }
 
-
   // set Coral PIDstatus to stat
-  public void setPIDStatus(boolean stat){
+  public void setPIDStatus(boolean stat) {
     pidStatus = stat;
   }
 
   // set Coral PID setpoint to setpoint
-  public void setCoralPivotPIDSetpoint(double setpoint){
+  public void setCoralPivotPIDSetpoint(double setpoint) {
     pivotPIDController.setSetpoint(setpoint);
   }
 
@@ -69,12 +74,12 @@ public class CoralPivotSubsystem extends SubsystemBase {
     return coralPivot.getSensorCollection().getQuadraturePosition();
   }
 
-  public double getSetpoint(){
+  public double getSetpoint() {
     return pivotPIDController.getSetpoint();
   }
 
   // return current value of PID status
-  public boolean getPIDStatus(){
+  public boolean getPIDStatus() {
     return pidStatus;
   }
 
@@ -83,49 +88,63 @@ public class CoralPivotSubsystem extends SubsystemBase {
     return coralIntake.isFwdLimitSwitchClosed() == 1;
   }
 
-
   // return true if at setpoint
-  public boolean atSetpoint(){
-    if(!pivotPIDController.atSetpoint()){
-      coralTimer.stop();
-      coralTimer.reset();
-      return false;
-    }
-    if(!coralTimer.isRunning()){
-      coralTimer.start();
-    }
-    if(coralTimer.get() >= coralTimeout){
-      return true;
-    }
-    return false;
+  public boolean atSetpoint() {
+    // if(!pivotPIDController.atSetpoint()){
+    // coralTimer.stop();
+    // coralTimer.reset();
+    // return false;
+    // }
+    // if(!coralTimer.isRunning()){
+    // coralTimer.start();
+    // }
+    // if(coralTimer.get() >= coralTimeout){
+    // return true;
+    // }
+    // return false;
+    return atSetpointVal;
   }
 
   @Override
   public void periodic() {
 
-    if(getLimitSwitch()){
+    if (getLimitSwitch()) {
       resetPivotEnc();
     }
 
-
-    if(getPIDStatus()){
+    if (getPIDStatus()) {
       error = pivotPIDController.calculate(getCoralSwitchEnc(), getSetpoint());
-      if(error > Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
+      if (error > Constants.CORAL_PIVOT_SPEED && !atSetpoint()) {
         error = Constants.CORAL_PIVOT_SPEED;
-      }else if(error < -Constants.CORAL_PIVOT_SPEED && !atSetpoint()){
+      } else if (error < -Constants.CORAL_PIVOT_SPEED && !atSetpoint()) {
         error = -Constants.CORAL_PIVOT_SPEED;
       }
 
-      if(error < 0 && prevError > 0){
+      if (error < 0 && prevError > 0) {
         pivotPIDController.reset();
-      } else if(error > 0 && prevError < 0){
+      } else if (error > 0 && prevError < 0) {
         pivotPIDController.reset();
       }
 
       prevError = error;
     }
 
-    if(atSetpoint()){
+    if (!pivotPIDController.atSetpoint()) {
+      coralTimer.stop();
+      coralTimer.reset();
+      atSetpointVal = false;
+    } else {
+      if (!coralTimer.isRunning()) {
+        coralTimer.start();
+      }
+      if (coralTimer.get() >= coralTimeout) {
+        atSetpointVal = true;
+      }else{
+        atSetpointVal = false;
+      }
+    }
+
+    if (atSetpoint()) {
       error = 0;
     }
 
@@ -134,12 +153,13 @@ public class CoralPivotSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
     SmartDashboard.putNumber("Intake Pivot Enc", getCoralSwitchEnc());
     SmartDashboard.putNumber("Pivot PID Error", error);
-    SmartDashboard.putNumber("Setpoint", setpoint);
+    SmartDashboard.putNumber("Setpoint", getSetpoint());
     SmartDashboard.putBoolean("PID Status", getPIDStatus());
     SmartDashboard.putBoolean("At Setpoint", atSetpoint());
+    SmartDashboard.putBoolean("Is Done", atSetpointVal);
     SmartDashboard.putNumber("Coral Timer", coralTimer.get());
 
-  //coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
-  // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
+    // coralIntake.set(TalonSRXControlMode.PercentOutput, intakeSpeed);
+    // coralPivot.set(TalonSRXControlMode.PercentOutput, pivotSpeed);
   }
 }
