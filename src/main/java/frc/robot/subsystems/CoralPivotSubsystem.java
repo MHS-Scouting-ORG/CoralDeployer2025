@@ -86,6 +86,10 @@ public class CoralPivotSubsystem extends SubsystemBase {
       }
     }
   }
+
+  public void setError(double value){
+    error = value;
+  }
   
   public void pivotMiddleToRight(){
     int count = 0;
