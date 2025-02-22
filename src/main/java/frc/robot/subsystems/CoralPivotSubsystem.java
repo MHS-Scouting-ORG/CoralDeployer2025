@@ -17,7 +17,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
   private PIDController pivotPIDController;
   private double error, prevError;
   private boolean pidStatus, atSetpointVal;
-  private Timer coralTimer;
+  private Timer coralTimer, pivotTimer;
   private final double coralTimeout;
 
   public CoralPivotSubsystem() {
@@ -26,11 +26,12 @@ public class CoralPivotSubsystem extends SubsystemBase {
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen,
         Constants.CORAL_INTAKE_ID);
-    pivotPIDController = new PIDController(0.0005, 0.0003, 0);
+    pivotPIDController = new PIDController(0.0005, 0.001, 0);
     pivotPIDController.setTolerance(20);
     pidStatus = false;
     atSetpointVal = false;
     coralTimer = new Timer();
+    pivotTimer = new Timer();
     coralTimeout = 0.125;
 
     coralIntake.configFactoryDefault();
@@ -71,16 +72,19 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   public void pivotMiddleToLeft(){
     int count = 0;
+    pivotTimer.reset();
     if(getCoralSwitchEnc() < - 300){
-      if(count == 0){
+      pivotTimer.start();
+      if(count == 0 && pivotTimer.get() < 0.15){
         setCoralPivotPIDSetpoint(-380);
-        if(atSetpoint()){
+        if(atSetpoint() && pivotTimer.get() >= 0.15){
           count++;
+          pivotTimer.stop();
         }
       }
       if(count == 1){
         setCoralPivotPIDSetpoint(-75);
-        if(atSetpoint()){
+        if(atSetpoint() && count < 2){
           count++;
         }
       }
