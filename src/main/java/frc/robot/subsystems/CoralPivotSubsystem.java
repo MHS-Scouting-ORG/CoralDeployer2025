@@ -151,10 +151,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double currError = getCPivotPIDSetpoint()-getCoralSwitchEnc();
-
-    if (getCLimitSwitch()) {
-    }
+    double currError = getCPivotPIDSetpoint() - getCoralSwitchEnc();
 
     if (getPIDStatus()) {
       command = pivotPIDController.calculate(getCoralSwitchEnc(), getCPivotPIDSetpoint());
@@ -171,6 +168,8 @@ public class CoralPivotSubsystem extends SubsystemBase {
       }
 
       prevError = currError;
+    } else {
+      setCoralPivotPIDSetpoint(getCoralSwitchEnc());
     }
 
     // if (atSetpoint()) {
