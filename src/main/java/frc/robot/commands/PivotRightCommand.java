@@ -21,7 +21,7 @@ public class PivotRightCommand extends Command {
   @Override
   public void initialize() {
     coralPivotSub.setPIDStatus(true);
-    coralPivotSub.pivotMiddleToRight();
+    // coralPivotSub.pivotMiddleToRight();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

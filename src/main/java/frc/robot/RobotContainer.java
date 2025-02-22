@@ -23,7 +23,7 @@ public class RobotContainer {
   private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem();
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final XboxController xbox = new XboxController(0);
-  private final Command coralResetError = new InstantCommand(() -> coralPivotSub.setError(0), coralPivotSub);
+  private final Command coralResetError = new InstantCommand(() -> coralPivotSub.setCommand(0), coralPivotSub);
   private final Command coralInnit = new InstantCommand(()->coralPivotSub.setPIDStatus(false), coralPivotSub);
   private final Command coralSetpoint = new InstantCommand(()-> coralPivotSub.setCoralPivotPIDSetpoint(coralPivotSub.getCoralSwitchEnc()), coralPivotSub);  
   // Replace with CommandPS4Controller or CommandJoystick if needed
