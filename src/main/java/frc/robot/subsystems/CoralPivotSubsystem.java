@@ -26,8 +26,8 @@ public class CoralPivotSubsystem extends SubsystemBase {
     coralPivot = new TalonSRX(Constants.CORAL_PIVOT_ID);
     coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen,
         Constants.CORAL_INTAKE_ID);
-    pivotPIDController = new PIDController(0.0006, 0.001, 0);
-    pivotPIDController.setTolerance(5);
+    pivotPIDController = new PIDController(0.0006, 0.001, 0.00001);
+    pivotPIDController.setTolerance(10);
     pidStatus = false;
     coralTimer = new Timer();
     pivotTimer = new Timer();
