@@ -21,7 +21,7 @@ public class PivotRightCommand extends Command {
   @Override
   public void initialize() {
     coralPivotSub.setPIDStatus(true);
-    coralPivotSub.setCoralPivotPIDSetpoint(-75);
+    coralPivotSub.setCoralPivotPIDSetpoint(-96);
     // coralPivotSub.pivotMiddleToRight();
   }
 

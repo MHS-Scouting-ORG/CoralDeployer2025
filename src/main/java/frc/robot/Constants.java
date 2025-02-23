@@ -18,7 +18,7 @@ public final class Constants {
     public static final double CORAL_INTAKE_SPEED = 0.8;
     public static final double CORAL_DEPLOY_SPEED = 0.8;
     public static final double CORAL_OUTTAKE_SPEED = 0;
-    public static final double CORAL_PIVOT_SPEED = 0.6;
+    public static final double CORAL_PIVOT_SPEED = 0.2;
 
     // IDs
     public static final int CORAL_INTAKE_ID = 15;

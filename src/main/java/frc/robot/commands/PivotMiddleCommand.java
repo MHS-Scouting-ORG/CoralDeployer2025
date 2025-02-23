@@ -21,7 +21,7 @@ public class PivotMiddleCommand extends Command {
   @Override
   public void initialize() {
     coralPivotSub.setPIDStatus(true);
-    coralPivotSub.setCoralPivotPIDSetpoint(-380);
+    coralPivotSub.setCoralPivotPIDSetpoint(-445);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
