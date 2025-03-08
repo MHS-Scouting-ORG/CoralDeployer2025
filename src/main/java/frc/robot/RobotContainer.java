@@ -12,20 +12,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CoralIntakeCommand;
 import frc.robot.commands.CoralDeployerCommand;
-import frc.robot.commands.PivotLeftCommand;
-import frc.robot.commands.PivotMiddleCommand;
-import frc.robot.commands.PivotRightCommand;
-import frc.robot.subsystems.CoralPivotSubsystem;
 import frc.robot.subsystems.CoralIntakeSubsystem;
+import frc.robot.subsystems.DeepHangSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem();
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
+  private final DeepHangSubsystem hangSub = new DeepHangSubsystem();
   private final XboxController xbox = new XboxController(0);
-  private final Command coralResetError = new InstantCommand(() -> coralPivotSub.setCommand(0), coralPivotSub);
-  private final Command coralInnit = new InstantCommand(()->coralPivotSub.setPIDStatus(false), coralPivotSub);
-  private final Command coralSetpoint = new InstantCommand(()-> coralPivotSub.setCoralPivotPIDSetpoint(coralPivotSub.getCoralSwitchEnc()), coralPivotSub);  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -39,15 +33,16 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new CoralIntakeCommand(coralIntakeSub, coralPivotSub));
-    new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
+    new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> hangSub.raiseHang(Constants.HANG_RAISE_SPEED)));
+    new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> hangSub.stopHang()));
+    new JoystickButton(xbox, XboxController.Button.kA.value).whileTrue(new InstantCommand(() -> hangSub.lowerHang(Constants.HANG_LOWER_SPEED)));
+    new JoystickButton(xbox, XboxController.Button.kA.value).whileFalse(new InstantCommand(() -> hangSub.stopHang()));
     //new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(-Constants.CORAL_PIVOT_SPEED)));
     //new JoystickButton(xbox, XboxController.Button.kX.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
     //new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(Constants.CORAL_PIVOT_SPEED)));
     //new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
-    new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new PivotRightCommand(coralPivotSub));
-    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new PivotLeftCommand(coralPivotSub));
-    new JoystickButton(xbox, XboxController.Button.kX.value).onTrue(new PivotMiddleCommand(coralPivotSub));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }
@@ -60,16 +55,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;
-
-}
-  public Command coralInnit(){
-    return coralInnit;
   }
-  public Command coralSetpoint(){
-    return coralSetpoint;
-  }
-  public Command coralResetError(){
-    return coralResetError;
-  }
-  
 }

@@ -4,33 +4,23 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
   private final DigitalInput opticalSensor;
-  private final TalonSRX coralIntake;
+  private final SparkMax coralIntake;
 
   public CoralIntakeSubsystem() {
 
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
-    coralIntake = new TalonSRX(Constants.CORAL_INTAKE_ID);
-
-    coralIntake.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, Constants.CORAL_INTAKE_ID);
-
-    coralIntake.configFactoryDefault();
+    coralIntake = new SparkMax(1, MotorType.kBrushless);
     
-    coralIntake.setInverted(true);
-    coralIntake.setNeutralMode(NeutralMode.Brake);
   }
   
   // return current value of Optical Switch
@@ -40,7 +30,11 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // set Coral Intake sped to speed
   public void setIntakeSpeed(double speed) {
-    coralIntake.set(TalonSRXControlMode.PercentOutput, speed);
+    coralIntake.set(speed);
+  }
+
+  public void stopIntake(){
+    coralIntake.stopMotor();
   }
 
   @Override

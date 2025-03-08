@@ -3,25 +3,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CoralIntakeSubsystem;
-import frc.robot.subsystems.CoralPivotSubsystem;
 
 public class CoralIntakeCommand extends Command {
 
     private CoralIntakeSubsystem coralIntakeSub;
-    private CoralPivotSubsystem coralPivotSub;
 
-    public CoralIntakeCommand(CoralIntakeSubsystem coralIntakeSub, CoralPivotSubsystem coralPivotSub) {
-      this.coralPivotSub = coralPivotSub;
+    public CoralIntakeCommand(CoralIntakeSubsystem coralIntakeSub) {
       this.coralIntakeSub = coralIntakeSub;
       addRequirements(this.coralIntakeSub);
-      addRequirements(this.coralPivotSub);
     }
   
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-      coralPivotSub.setPIDStatus(true);
-      coralPivotSub.setCoralPivotPIDSetpoint(-430);
       coralIntakeSub.setIntakeSpeed(Constants.CORAL_INTAKE_SPEED);
     }
 
@@ -33,7 +27,7 @@ public class CoralIntakeCommand extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-      coralIntakeSub.setIntakeSpeed(0);
+      coralIntakeSub.stopIntake();
     }
   
     // Returns true when the command should end.
