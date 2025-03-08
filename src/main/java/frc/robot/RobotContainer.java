@@ -20,6 +20,7 @@ public class RobotContainer {
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final DeepHangSubsystem hangSub = new DeepHangSubsystem();
   private final XboxController xbox = new XboxController(0);
+  private final Command resetHangPos = new InstantCommand(() -> hangSub.setHangPos(0));
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -55,5 +56,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;
+  }
+
+  public Command resetHangPos(){
+    return resetHangPos;
   }
 }
