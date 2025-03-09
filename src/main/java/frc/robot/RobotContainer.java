@@ -40,10 +40,6 @@ public class RobotContainer {
     new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> hangSub.stopHang()));
     new JoystickButton(xbox, XboxController.Button.kA.value).whileTrue(new InstantCommand(() -> hangSub.setHangSpeed(Constants.HANG_LOWER_SPEED)));
     new JoystickButton(xbox, XboxController.Button.kA.value).whileFalse(new InstantCommand(() -> hangSub.stopHang()));
-    //new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(-Constants.CORAL_PIVOT_SPEED)));
-    //new JoystickButton(xbox, XboxController.Button.kX.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
-    //new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(Constants.CORAL_PIVOT_SPEED)));
-    //new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }

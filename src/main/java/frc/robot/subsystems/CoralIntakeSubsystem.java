@@ -19,7 +19,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   public CoralIntakeSubsystem() {
 
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
-    coralIntake = new SparkMax(1, MotorType.kBrushless);
+    coralIntake = new SparkMax(Constants.CORAL_INTAKE_ID, MotorType.kBrushless);
+    coralIntake.setVoltage(1);
     
   }
   
