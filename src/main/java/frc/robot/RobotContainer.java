@@ -20,7 +20,7 @@ public class RobotContainer {
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final DeepHangSubsystem hangSub = new DeepHangSubsystem();
   private final XboxController xbox = new XboxController(0);
-  private final Command resetHangPos = new InstantCommand(() -> hangSub.setHangPos(0));
+  private final Command setPoint2CurrEnc = new InstantCommand(() -> hangSub.setHangSetpoint(hangSub.getHangPos().getValueAsDouble()));
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -36,9 +36,9 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
     new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
-    new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> hangSub.raiseHang(Constants.HANG_RAISE_SPEED)));
+    new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> hangSub.setHangSpeed(Constants.HANG_RAISE_SPEED)));
     new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> hangSub.stopHang()));
-    new JoystickButton(xbox, XboxController.Button.kA.value).whileTrue(new InstantCommand(() -> hangSub.lowerHang(Constants.HANG_LOWER_SPEED)));
+    new JoystickButton(xbox, XboxController.Button.kA.value).whileTrue(new InstantCommand(() -> hangSub.setHangSpeed(Constants.HANG_LOWER_SPEED)));
     new JoystickButton(xbox, XboxController.Button.kA.value).whileFalse(new InstantCommand(() -> hangSub.stopHang()));
     //new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(-Constants.CORAL_PIVOT_SPEED)));
     //new JoystickButton(xbox, XboxController.Button.kX.value).whileFalse(new InstantCommand(() -> coralIntakeSub.setPivotSpeed(0)));
@@ -58,7 +58,7 @@ public class RobotContainer {
     return null;
   }
 
-  public Command resetHangPos(){
-    return resetHangPos;
+  public Command setpoint2CurrError(){
+    return setPoint2CurrEnc;
   }
 }

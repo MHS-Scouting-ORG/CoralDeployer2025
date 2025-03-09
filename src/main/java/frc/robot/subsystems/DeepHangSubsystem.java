@@ -11,7 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,16 +23,24 @@ public class DeepHangSubsystem extends SubsystemBase {
   private final TalonFXConfiguration hangKrakenConfig;
   private final VoltageOut voltControl;
   private final VelocityVoltage velControl;
+  private final PIDController hangPidController;
+  private double prevError, command;
 
   public DeepHangSubsystem() {
     hangKraken = new TalonFX(Constants.HANG_ID);
+
     hangKrakenConfig = new TalonFXConfiguration();
     hangKraken.getConfigurator().apply(hangKrakenConfig);
+
     voltControl = new VoltageOut(0);
     hangKraken.setControl(voltControl.withOutput(1));
+
     velControl = new VelocityVoltage(0);
     hangKraken.setControl(velControl.withVelocity(500));
+
     hangKraken.setNeutralMode(NeutralModeValue.Brake);
+
+    hangPidController = new PIDController(0, 0, 0);
   }
 
   public void setHangPos(double angle){
@@ -43,20 +51,20 @@ public class DeepHangSubsystem extends SubsystemBase {
     return hangKraken.getPosition();
   }
 
-  public void raiseHang(double speed){
-    if(getHangPos().getValueAsDouble() > 100 && speed > 0){
-      stopHang();
-    } else{
-    hangKraken.set(speed);
-    }
+  public void setHangSetpoint(double point){
+    hangPidController.setSetpoint(point);
   }
 
-  public void lowerHang(double speed){
-    if(getHangPos().getValueAsDouble() < 10 && speed < 0){
-      stopHang();
-    } else{
+  public double getHangSetpoint(){
+    return hangPidController.getSetpoint();
+  }
+
+  public void setHangSpeed (double speed){
     hangKraken.set(speed);
-    }
+  }
+
+  public boolean atSetpoint (){
+    return hangPidController.atSetpoint();
   }
 
   public void stopHang(){
@@ -65,11 +73,27 @@ public class DeepHangSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if((getHangPos().getValueAsDouble() > 100 && hangKraken.getVelocity().getValueAsDouble() > 0) 
-    || (getHangPos().getValueAsDouble() < 10 && hangKraken.getVelocity().getValueAsDouble() < 0)){
-      stopHang();
+    double currError = getHangSetpoint() - getHangPos().getValueAsDouble();
+
+    command = hangPidController.calculate(getHangPos().getValueAsDouble(), getHangSetpoint());
+    if(command > Constants.HANG_RAISE_SPEED){
+      command = Constants.HANG_RAISE_SPEED;
+    } else if(command < Constants.HANG_LOWER_SPEED){
+      command = Constants.HANG_LOWER_SPEED;
     }
+
+    if(currError < 0 && prevError > 0){
+      hangPidController.reset();
+    } else if(currError > 0 && prevError < 0){
+      hangPidController.reset();
+    }
+
+    prevError = currError;
+
+    setHangSpeed(currError);
+
     SmartDashboard.putNumber("Kraken Position", getHangPos().getValueAsDouble());
+    SmartDashboard.putNumber("Hang PID setpoint", getHangSetpoint());
     // This method will be called once per scheduler run
   }
 }

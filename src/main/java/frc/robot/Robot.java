@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private Command resetHangPosCommand;
+  private Command setpoint2CurrEncCommand;
   private final RobotContainer m_robotContainer;
 
   /**
@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    resetHangPosCommand = m_robotContainer.resetHangPos();
+    setpoint2CurrEncCommand = m_robotContainer.setpoint2CurrError();
   }
 
   /**
@@ -73,8 +73,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    resetHangPosCommand.schedule();
-    resetHangPosCommand.cancel();
+    setpoint2CurrEncCommand.schedule();
+    setpoint2CurrEncCommand.cancel();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
