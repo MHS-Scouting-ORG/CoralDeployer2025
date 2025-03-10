@@ -68,7 +68,7 @@ public class DeepHangSubsystem extends SubsystemBase {
   }
 
   public void stopHang(){
-    hangKraken.stopMotor();
+    hangKraken.set(0);
   }
 
   @Override
