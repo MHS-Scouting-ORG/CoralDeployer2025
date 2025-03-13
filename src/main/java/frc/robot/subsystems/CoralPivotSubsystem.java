@@ -63,10 +63,10 @@ public class CoralPivotSubsystem extends SubsystemBase {
     double currError = getCoralPivotSetpoint() - getCoralPivotEnc();
 
     command = coralPivotPidController.calculate(getCoralPivotEnc(), getCoralPivotSetpoint());
-    if(command > Constants.HANG_RAISE_SPEED){
-      command = Constants.HANG_RAISE_SPEED;
-    } else if(command < Constants.HANG_LOWER_SPEED){
-      command = Constants.HANG_LOWER_SPEED;
+    if(command > Constants.CORAL_PIVOT_UP_SPEED){
+      command = Constants.CORAL_PIVOT_UP_SPEED;
+    } else if(command < Constants.CORAL_PIVOT_DOWN_SPEED){
+      command = Constants.CORAL_PIVOT_DOWN_SPEED;
     }
 
     if(currError < 0 && prevError > 0){
@@ -81,6 +81,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Kraken Position", getCoralPivotEnc());
     SmartDashboard.putNumber("Hang PID setpoint", getCoralPivotSetpoint());
+    SmartDashboard.putNumber("Command Output", command);
     // This method will be called once per scheduler run
   }
 }
