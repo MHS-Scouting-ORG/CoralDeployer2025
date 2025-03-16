@@ -28,6 +28,13 @@ public class CoralPivotSubsystem extends SubsystemBase {
     return coralPivot.getForwardLimitSwitch();
   }
 
+  public void setPivotSpeed(double speed){
+    coralPivot.set(speed);
+  }
+
+  public void stop(){
+    coralPivot.stopMotor();
+  }
   public void setCoralPivotSetpoint(double point){
     coralPivotPidController.setSetpoint(point);
   }
