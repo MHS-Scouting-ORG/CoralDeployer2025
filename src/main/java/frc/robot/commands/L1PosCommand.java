@@ -5,19 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.CoralPivotSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L1PosCommand extends Command {
   /** Creates a new L1CoralPivotCommand. */
   private CoralPivotSubsystem coralPivotSub;
-  private CoralIntakeSubsystem coralIntakeSub;
-  public L1PosCommand(CoralPivotSubsystem coralPivotSub, CoralIntakeSubsystem coralIntakeSub) {
+  public L1PosCommand(CoralPivotSubsystem coralPivotSub) {
     this.coralPivotSub = coralPivotSub;
-    this.coralIntakeSub = coralIntakeSub;
     addRequirements(this.coralPivotSub);
-    addRequirements(this.coralIntakeSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,7 +25,11 @@ public class L1PosCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(coralPivotSub.getPivotLimitSwitch()){
+      coralPivotSub.resetCoralPivotEnc();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -38,6 +38,6 @@ public class L1PosCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return coralPivotSub.atSetpoint() || coralIntakeSub.getPivotLimitSwitch();
+    return coralPivotSub.atSetpoint() || coralPivotSub.getPivotLimitSwitch();
   }
 }

@@ -23,7 +23,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
   private final DeepHangSubsystem hangSub = new DeepHangSubsystem();
-  private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem();
+  private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem(coralIntakeSub.getPivotLimitSwitch());
   private final XboxController xbox = new XboxController(0);
   private final Command setPoint2CurrEnc = new InstantCommand(() -> coralPivotSub.setCoralPivotSetpoint(coralPivotSub.getCoralPivotEnc()));
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -47,7 +47,7 @@ public class RobotContainer {
     new JoystickButton(xbox, XboxController.Button.kA.value).whileFalse(new InstantCommand(() -> coralPivotSub.stop()));
     // new JoystickButton(xbox, XboxController.Button.kY.value).onTrue(new L4PosCommand(coralPivotSub));
     // new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new L2AndL3PosCommand(coralPivotSub));
-    // new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new L1PosCommand(coralPivotSub, coralIntakeSub));
+    // new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new L1PosCommand(coralPivotSub));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }

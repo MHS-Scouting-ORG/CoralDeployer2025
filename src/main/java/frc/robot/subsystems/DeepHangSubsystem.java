@@ -87,8 +87,8 @@ public class DeepHangSubsystem extends SubsystemBase {
 
     setHangSpeed(currError);
 
-    SmartDashboard.putNumber("Kraken Position", getHangPos().getValueAsDouble());
-    SmartDashboard.putNumber("Hang PID setpoint", getHangSetpoint());
+    // SmartDashboard.putNumber("Kraken Position", getHangPos().getValueAsDouble());
+    // SmartDashboard.putNumber("Hang PID setpoint", getHangSetpoint());
     // This method will be called once per scheduler run
   }
 }

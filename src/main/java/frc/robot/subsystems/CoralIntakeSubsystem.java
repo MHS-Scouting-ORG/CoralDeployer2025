@@ -8,22 +8,30 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
   private final DigitalInput opticalSensor;
   private final SparkMax coralIntake;
+  private final SparkMaxConfig config;
 
   public CoralIntakeSubsystem() {
 
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
     coralIntake = new SparkMax(Constants.CORAL_INTAKE_ID, MotorType.kBrushless);
+    config = new SparkMaxConfig();
+    config.idleMode(SparkBaseConfig.IdleMode.kBrake);
+    coralIntake.configure(config, null, null);
+    
   }
   
-  public boolean getPivotLimitSwitch(){
-    return coralIntake.getForwardLimitSwitch().isPressed();
+  public SparkLimitSwitch getPivotLimitSwitch(){
+    return coralIntake.getForwardLimitSwitch();
   }
 
   // return current value of Optical Switch
@@ -44,6 +52,6 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Optical Sensor", getOpticalSensor());
-    SmartDashboard.putBoolean("Pivot Limit Switch", getPivotLimitSwitch());
+    SmartDashboard.putBoolean("Pivot Limit Switch", getPivotLimitSwitch().isPressed());
   }
 }

@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,12 +15,21 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   private final RelativeEncoder coralPivotEnc;
   private final SparkMax coralPivot;
+  private final SparkMaxConfig config;
+  private final SparkLimitSwitch ls;
   private final PIDController coralPivotPidController;
   private double prevError, command;
 
-  public CoralPivotSubsystem() {
+  public CoralPivotSubsystem(SparkLimitSwitch limitSwitch) {
     coralPivot = new SparkMax(Constants.CORAL_PIVOT_ID, MotorType.kBrushless);
     coralPivotEnc = coralPivot.getEncoder();
+    ls = limitSwitch;
+    prevError = 0;
+    command = 0;
+    
+    config = new SparkMaxConfig();
+    config.idleMode(SparkBaseConfig.IdleMode.kBrake);
+    coralPivot.configure(config, null, null);
 
     coralPivotPidController = new PIDController(0, 0, 0);
 
@@ -28,13 +39,10 @@ public class CoralPivotSubsystem extends SubsystemBase {
     return coralPivot.getForwardLimitSwitch();
   }
 
-  public void setPivotSpeed(double speed){
-    coralPivot.set(speed);
+  public boolean getPivotLimitSwitch(){
+    return ls.isPressed();
   }
 
-  public void stop(){
-    coralPivot.stopMotor();
-  }
   public void setCoralPivotSetpoint(double point){
     coralPivotPidController.setSetpoint(point);
   }
@@ -51,8 +59,16 @@ public class CoralPivotSubsystem extends SubsystemBase {
     return coralPivotEnc.getPosition();
   }
 
+  public void resetCoralPivotEnc(){
+    coralPivotEnc.setPosition(0);
+  }
+
   public void setCoralPivotSpeed (double val){
     coralPivot.set(val);
+  }
+  
+  public void stop(){
+    coralPivot.stopMotor();
   }
 
   @Override
@@ -75,10 +91,10 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     prevError = currError;
 
-    setCoralPivotSpeed(currError);
+    setCoralPivotSpeed(command);
 
-    SmartDashboard.putNumber("Kraken Position", getCoralPivotEnc());
-    SmartDashboard.putNumber("Hang PID setpoint", getCoralPivotSetpoint());
+    SmartDashboard.putNumber("Pivot Position", getCoralPivotEnc());
+    SmartDashboard.putNumber("Pivot PID setpoint", getCoralPivotSetpoint());
     SmartDashboard.putNumber("Command Output", command);
     // This method will be called once per scheduler run
   }
