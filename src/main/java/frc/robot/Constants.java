@@ -26,9 +26,9 @@ public final class Constants {
     public static final double HANG_LOWER_SPEED = -0.4;
 
     // ID
-    public static final int CORAL_INTAKE_ID = 4;
-    public static final int CORAL_OPTICAL_SENSOR_ID = 1;
-    public static final int CORAL_PIVOT_ID = 2;
+    public static final int CORAL_INTAKE_ID = 8;
+    public static final int CORAL_OPTICAL_SENSOR_ID = 3;
+    public static final int CORAL_PIVOT_ID = 7;
 
     public static final int HANG_ID = 3;
 

@@ -1,41 +1,31 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class CoralPivotSubsystem extends SubsystemBase {
 
-  private final DigitalInput highLimit, lowLimit;
   private final RelativeEncoder coralPivotEnc;
   private final SparkMax coralPivot;
   private final PIDController coralPivotPidController;
   private double prevError, command;
 
   public CoralPivotSubsystem() {
-    
     coralPivot = new SparkMax(Constants.CORAL_PIVOT_ID, MotorType.kBrushless);
-
     coralPivotEnc = coralPivot.getEncoder();
-
-    highLimit = new DigitalInput(Constants.HIGHLIMIT_ID);
-    lowLimit = new DigitalInput(Constants.LOWLIMIT_ID);
 
     coralPivotPidController = new PIDController(0, 0, 0);
 
   }
 
-  public boolean getHighLimit(){
-    return highLimit.get();
-  }
-
-  public boolean getLowLimit(){
-    return lowLimit.get();
+  public SparkLimitSwitch getLimitSwitch(){
+    return coralPivot.getForwardLimitSwitch();
   }
 
   public void setCoralPivotSetpoint(double point){
@@ -60,6 +50,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     double currError = getCoralPivotSetpoint() - getCoralPivotEnc();
 
     command = coralPivotPidController.calculate(getCoralPivotEnc(), getCoralPivotSetpoint());
