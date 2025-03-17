@@ -26,6 +26,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
     ls = limitSwitch;
     prevError = 0;
     command = 0;
+    pidStat = false;
 
     config = new SparkMaxConfig();
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
@@ -93,13 +94,15 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
       prevError = currError;
 
-      if (getPivotLimitSwitch()) {
-        if (command < 0) {
-          command = 0;
-        }
-      }
-    } else {
+    }else{
+      command = 0;
+    }
+
+    if (getPivotLimitSwitch()) {
       resetCoralPivotEnc();
+      if (command < 0) {
+        command = 0;
+      }
     }
 
     setCoralPivotSpeed(command);
@@ -108,6 +111,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Pivot PID setpoint", getCoralPivotSetpoint());
     SmartDashboard.putNumber("Command Output", command);
     SmartDashboard.putBoolean("Pivot LS", getPivotLimitSwitch());
+    SmartDashboard.putBoolean("At Setpoint", atSetpoint());
     // This method will be called once per scheduler run
   }
 }

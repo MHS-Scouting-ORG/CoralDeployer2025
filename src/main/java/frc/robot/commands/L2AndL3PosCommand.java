@@ -21,19 +21,17 @@ public class L2AndL3PosCommand extends Command {
   @Override
   public void initialize() {
     coralPivotSub.setPIDStat(false);
-    coralPivotSub.setCoralPivotSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    coralPivotSub.setCoralPivotSpeed(-0.8);
+    coralPivotSub.setCoralPivotSpeed(-0.35);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    coralPivotSub.resetCoralPivotEnc();
     coralPivotSub.stop();
   }
 

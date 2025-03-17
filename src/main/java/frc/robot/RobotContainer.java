@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CoralIntakeCommand;
-import frc.robot.commands.L1PosCommand;
 import frc.robot.commands.L2AndL3PosCommand;
 import frc.robot.commands.L4PosCommand;
 import frc.robot.commands.CoralDeployerCommand;
@@ -54,7 +53,6 @@ public class RobotContainer {
     
     new JoystickButton(xbox, XboxController.Button.kY.value).onTrue(new L4PosCommand(coralPivotSub));
     new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new L2AndL3PosCommand(coralPivotSub));
-    // new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new L1PosCommand(coralPivotSub));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);
   }

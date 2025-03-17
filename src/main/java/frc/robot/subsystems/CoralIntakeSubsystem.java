@@ -14,13 +14,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
-  private final DigitalInput opticalSensor;
+  private final DigitalInput pivotSensor;
   private final SparkMax coralIntake;
   private final SparkMaxConfig config;
 
   public CoralIntakeSubsystem(SparkMax intakeMotor) {
 
-    opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
+    pivotSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
     coralIntake = intakeMotor;
     config = new SparkMaxConfig();
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
@@ -29,8 +29,8 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   // return current value of Optical Switch
-  public boolean getOpticalSensor() {
-    return opticalSensor.get();
+  public boolean getPivotSensor() {
+    return pivotSensor.get();
   }
 
   // set Coral Intake sped to speed
@@ -45,6 +45,6 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Optical Sensor", getOpticalSensor());
+    SmartDashboard.putBoolean("Optical Sensor", getPivotSensor());
   }
 }
