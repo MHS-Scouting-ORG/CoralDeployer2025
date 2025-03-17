@@ -29,7 +29,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   // return current value of Optical Switch
-  public boolean getPivotSensor() {
+  public boolean getOpticalSensor() {
     return pivotSensor.get();
   }
 
@@ -45,6 +45,6 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("[C] Optical Sensor", getPivotSensor());
+    SmartDashboard.putBoolean("[C] Optical Sensor", getOpticalSensor());
   }
 }
