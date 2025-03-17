@@ -27,7 +27,7 @@ public final class Constants {
 
     // ID
     public static final int CORAL_INTAKE_ID = 8;
-    public static final int CORAL_OPTICAL_SENSOR_ID = 3;
+    public static final int CORAL_OPTICAL_SENSOR_ID = 4;
     public static final int CORAL_PIVOT_ID = 7;
 
     public static final int HANG_ID = 3;
@@ -35,6 +35,11 @@ public final class Constants {
     public static final int HIGHLIMIT_ID = 1;
     public static final int LOWLIMIT_ID = 2;
 
+    // PIVOT PID VALUES
+
+    public static final double kPIVOT_P = 0.001;
+    public static final double kPIVOT_I = 0;
+    public static final double kPIVOT_D = 0;
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

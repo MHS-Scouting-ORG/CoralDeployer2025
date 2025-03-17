@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -20,8 +21,8 @@ public class CoralPivotSubsystem extends SubsystemBase {
   private final PIDController coralPivotPidController;
   private double prevError, command;
 
-  public CoralPivotSubsystem(SparkLimitSwitch limitSwitch) {
-    coralPivot = new SparkMax(Constants.CORAL_PIVOT_ID, MotorType.kBrushless);
+  public CoralPivotSubsystem(SparkLimitSwitch limitSwitch, SparkMax pivotMotor) {
+    coralPivot = pivotMotor;
     coralPivotEnc = coralPivot.getEncoder();
     ls = limitSwitch;
     prevError = 0;
@@ -31,12 +32,8 @@ public class CoralPivotSubsystem extends SubsystemBase {
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
     coralPivot.configure(config, null, null);
 
-    coralPivotPidController = new PIDController(0, 0, 0);
+    coralPivotPidController = new PIDController(Constants.kPIVOT_P, Constants.kPIVOT_I, Constants.kPIVOT_D);
 
-  }
-
-  public SparkLimitSwitch getLimitSwitch(){
-    return coralPivot.getForwardLimitSwitch();
   }
 
   public boolean getPivotLimitSwitch(){
@@ -93,9 +90,15 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     setCoralPivotSpeed(command);
 
+
+    if(getPivotLimitSwitch()){
+      resetCoralPivotEnc(); 
+    } 
+
     SmartDashboard.putNumber("Pivot Position", getCoralPivotEnc());
     SmartDashboard.putNumber("Pivot PID setpoint", getCoralPivotSetpoint());
     SmartDashboard.putNumber("Command Output", command);
+    SmartDashboard.putBoolean("Pivot LS", getPivotLimitSwitch());
     // This method will be called once per scheduler run
   }
 }

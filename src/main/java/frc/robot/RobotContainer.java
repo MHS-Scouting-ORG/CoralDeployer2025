@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,9 +25,13 @@ import frc.robot.subsystems.DeepHangSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem();
+
+  private SparkMax pivotMotor = new SparkMax(7, MotorType.kBrushless);
+  private SparkMax intakeMotor = new SparkMax(8, MotorType.kBrushless);
+
+  private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem(intakeMotor);
   private final DeepHangSubsystem hangSub = new DeepHangSubsystem();
-  private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem(coralIntakeSub.getPivotLimitSwitch());
+  private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem(intakeMotor.getForwardLimitSwitch(), pivotMotor);
   private final XboxController xbox = new XboxController(0);
   private final Command setPoint2CurrEnc = new InstantCommand(() -> coralPivotSub.setCoralPivotSetpoint(coralPivotSub.getCoralPivotEnc()));
   // Replace with CommandPS4Controller or CommandJoystick if needed

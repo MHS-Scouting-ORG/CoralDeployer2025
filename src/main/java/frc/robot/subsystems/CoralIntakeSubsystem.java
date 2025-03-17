@@ -20,18 +20,14 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   private final SparkMax coralIntake;
   private final SparkMaxConfig config;
 
-  public CoralIntakeSubsystem() {
+  public CoralIntakeSubsystem(SparkMax intakeMotor) {
 
     opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
-    coralIntake = new SparkMax(Constants.CORAL_INTAKE_ID, MotorType.kBrushless);
+    coralIntake = intakeMotor;
     config = new SparkMaxConfig();
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
     coralIntake.configure(config, null, null);
     
-  }
-  
-  public SparkLimitSwitch getPivotLimitSwitch(){
-    return coralIntake.getForwardLimitSwitch();
   }
 
   // return current value of Optical Switch
@@ -52,6 +48,5 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Optical Sensor", getOpticalSensor());
-    SmartDashboard.putBoolean("Pivot Limit Switch", getPivotLimitSwitch().isPressed());
   }
 }
