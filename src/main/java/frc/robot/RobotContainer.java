@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,7 +20,6 @@ import frc.robot.commands.L4PosCommand;
 import frc.robot.commands.CoralDeployerCommand;
 import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.CoralPivotSubsystem;
-import frc.robot.subsystems.DeepHangSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -30,7 +28,6 @@ public class RobotContainer {
   private SparkMax intakeMotor = new SparkMax(8, MotorType.kBrushless);
 
   private final CoralIntakeSubsystem coralIntakeSub = new CoralIntakeSubsystem(intakeMotor);
-  private final DeepHangSubsystem hangSub = new DeepHangSubsystem();
   private final CoralPivotSubsystem coralPivotSub = new CoralPivotSubsystem(intakeMotor.getForwardLimitSwitch(), pivotMotor);
   private final XboxController xbox = new XboxController(0);
   private final Command setPoint2CurrEnc = new InstantCommand(() -> coralPivotSub.setCoralPivotSetpoint(coralPivotSub.getCoralPivotEnc()));
@@ -49,12 +46,14 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new CoralIntakeCommand(coralIntakeSub));
     new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new CoralDeployerCommand(coralIntakeSub));
-    new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralPivotSub.setCoralPivotSpeed(Constants.CORAL_PIVOT_UP_SPEED)));
-    new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralPivotSub.stop()));
-    new JoystickButton(xbox, XboxController.Button.kA.value).whileTrue(new InstantCommand(() -> coralPivotSub.setCoralPivotSpeed(Constants.CORAL_PIVOT_DOWN_SPEED)));
-    new JoystickButton(xbox, XboxController.Button.kA.value).whileFalse(new InstantCommand(() -> coralPivotSub.stop()));
-    // new JoystickButton(xbox, XboxController.Button.kY.value).onTrue(new L4PosCommand(coralPivotSub));
-    // new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new L2AndL3PosCommand(coralPivotSub));
+
+    // new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> coralPivotSub.setCoralPivotSpeed(Constants.CORAL_PIVOT_UP_SPEED)));
+    // new JoystickButton(xbox, XboxController.Button.kY.value).whileFalse(new InstantCommand(() -> coralPivotSub.stop()));
+    // new JoystickButton(xbox, XboxController.Button.kA.value).whileTrue(new InstantCommand(() -> coralPivotSub.setCoralPivotSpeed(Constants.CORAL_PIVOT_DOWN_SPEED)));
+    // new JoystickButton(xbox, XboxController.Button.kA.value).whileFalse(new InstantCommand(() -> coralPivotSub.stop()));
+    
+    new JoystickButton(xbox, XboxController.Button.kY.value).onTrue(new L4PosCommand(coralPivotSub));
+    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new L2AndL3PosCommand(coralPivotSub));
     // new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new L1PosCommand(coralPivotSub));
 
     //new JoystickButton(stick, 3).onTrue(coralSwitchCmd);

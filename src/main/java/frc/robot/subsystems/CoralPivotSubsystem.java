@@ -30,6 +30,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
     
     config = new SparkMaxConfig();
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
     coralPivot.configure(config, null, null);
 
     coralPivotPidController = new PIDController(Constants.kPIVOT_P, Constants.kPIVOT_I, Constants.kPIVOT_D);
@@ -88,12 +89,14 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     prevError = currError;
 
-    setCoralPivotSpeed(command);
-
-
     if(getPivotLimitSwitch()){
-      resetCoralPivotEnc(); 
+        resetCoralPivotEnc();
+      if(command < 0){
+        command = 0;
+      }
     } 
+
+    setCoralPivotSpeed(command);
 
     SmartDashboard.putNumber("Pivot Position", getCoralPivotEnc());
     SmartDashboard.putNumber("Pivot PID setpoint", getCoralPivotSetpoint());

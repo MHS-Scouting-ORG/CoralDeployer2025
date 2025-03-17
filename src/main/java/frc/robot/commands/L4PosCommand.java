@@ -20,7 +20,7 @@ public class L4PosCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    coralPivotSub.setCoralPivotSetpoint(0);//test and change val
+    coralPivotSub.setCoralPivotSetpoint(41);//test and change val
   }
 
   // Called every time the scheduler runs while the command is scheduled.
