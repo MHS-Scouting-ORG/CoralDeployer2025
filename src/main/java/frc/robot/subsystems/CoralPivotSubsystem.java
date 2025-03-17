@@ -107,11 +107,11 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     setCoralPivotSpeed(command);
 
-    SmartDashboard.putNumber("Pivot Position", getCoralPivotEnc());
-    SmartDashboard.putNumber("Pivot PID setpoint", getCoralPivotSetpoint());
-    SmartDashboard.putNumber("Command Output", command);
-    SmartDashboard.putBoolean("Pivot LS", getPivotLimitSwitch());
-    SmartDashboard.putBoolean("At Setpoint", atSetpoint());
+    SmartDashboard.putNumber("[C] Pivot Position", getCoralPivotEnc());
+    SmartDashboard.putNumber("[C] Pivot PID setpoint", getCoralPivotSetpoint());
+    SmartDashboard.putNumber("[C] Command Output", command);
+    SmartDashboard.putBoolean("[C] Pivot LS", getPivotLimitSwitch());
+    SmartDashboard.putBoolean("[C] At Setpoint", atSetpoint());
     // This method will be called once per scheduler run
   }
 }

@@ -45,6 +45,6 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Optical Sensor", getPivotSensor());
+    SmartDashboard.putBoolean("[C] Optical Sensor", getPivotSensor());
   }
 }
