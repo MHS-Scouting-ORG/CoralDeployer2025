@@ -14,13 +14,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
-  private final DigitalInput pivotSensor;
+  private final DigitalInput opticalSensor;
   private final SparkMax coralIntake;
   private final SparkMaxConfig config;
 
   public CoralIntakeSubsystem(SparkMax intakeMotor) {
 
-    pivotSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
+    opticalSensor = new DigitalInput(Constants.CORAL_OPTICAL_SENSOR_ID);
     coralIntake = intakeMotor;
     config = new SparkMaxConfig();
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
@@ -30,7 +30,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   // return current value of Optical Switch
   public boolean getOpticalSensor() {
-    return pivotSensor.get();
+    return opticalSensor.get();
   }
 
   // set Coral Intake sped to speed
