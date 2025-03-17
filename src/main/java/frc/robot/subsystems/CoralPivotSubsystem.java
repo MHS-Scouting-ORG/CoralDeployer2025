@@ -3,10 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +17,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
   private final SparkMaxConfig config;
   private final SparkLimitSwitch ls;
   private final PIDController coralPivotPidController;
+  private boolean pidStat;
   private double prevError, command;
 
   public CoralPivotSubsystem(SparkLimitSwitch limitSwitch, SparkMax pivotMotor) {
@@ -27,7 +26,7 @@ public class CoralPivotSubsystem extends SubsystemBase {
     ls = limitSwitch;
     prevError = 0;
     command = 0;
-    
+
     config = new SparkMaxConfig();
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
@@ -37,36 +36,40 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   }
 
-  public boolean getPivotLimitSwitch(){
+  public boolean getPivotLimitSwitch() {
     return ls.isPressed();
   }
 
-  public void setCoralPivotSetpoint(double point){
+  public void setCoralPivotSetpoint(double point) {
     coralPivotPidController.setSetpoint(point);
   }
 
-  public double getCoralPivotSetpoint(){
+  public double getCoralPivotSetpoint() {
     return coralPivotPidController.getSetpoint();
   }
 
-  public boolean atSetpoint (){
+  public boolean atSetpoint() {
     return coralPivotPidController.atSetpoint();
   }
 
-  public double getCoralPivotEnc (){
+  public double getCoralPivotEnc() {
     return coralPivotEnc.getPosition();
   }
 
-  public void resetCoralPivotEnc(){
+  public void resetCoralPivotEnc() {
     coralPivotEnc.setPosition(0);
   }
 
-  public void setCoralPivotSpeed (double val){
+  public void setCoralPivotSpeed(double val) {
     coralPivot.set(val);
   }
-  
-  public void stop(){
+
+  public void stop() {
     coralPivot.stopMotor();
+  }
+
+  public void setPIDStat(boolean stat) {
+    pidStat = stat;
   }
 
   @Override
@@ -74,27 +77,30 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
     double currError = getCoralPivotSetpoint() - getCoralPivotEnc();
 
-    command = coralPivotPidController.calculate(getCoralPivotEnc(), getCoralPivotSetpoint());
-    if(command > Constants.CORAL_PIVOT_UP_SPEED){
-      command = Constants.CORAL_PIVOT_UP_SPEED;
-    } else if(command < Constants.CORAL_PIVOT_DOWN_SPEED){
-      command = Constants.CORAL_PIVOT_DOWN_SPEED;
-    }
-
-    if(currError < 0 && prevError > 0){
-      coralPivotPidController.reset();
-    } else if(currError > 0 && prevError < 0){
-      coralPivotPidController.reset();
-    }
-
-    prevError = currError;
-
-    if(getPivotLimitSwitch()){
-        resetCoralPivotEnc();
-      if(command < 0){
-        command = 0;
+    if (pidStat) {
+      command = coralPivotPidController.calculate(getCoralPivotEnc(), getCoralPivotSetpoint());
+      if (command > Constants.CORAL_PIVOT_UP_SPEED) {
+        command = Constants.CORAL_PIVOT_UP_SPEED;
+      } else if (command < Constants.CORAL_PIVOT_DOWN_SPEED) {
+        command = Constants.CORAL_PIVOT_DOWN_SPEED;
       }
-    } 
+
+      if (currError < 0 && prevError > 0) {
+        coralPivotPidController.reset();
+      } else if (currError > 0 && prevError < 0) {
+        coralPivotPidController.reset();
+      }
+
+      prevError = currError;
+
+      if (getPivotLimitSwitch()) {
+        if (command < 0) {
+          command = 0;
+        }
+      }
+    } else {
+      resetCoralPivotEnc();
+    }
 
     setCoralPivotSpeed(command);
 
