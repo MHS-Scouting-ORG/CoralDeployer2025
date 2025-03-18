@@ -21,7 +21,15 @@ public class L2AndL3PosCommand extends Command {
   @Override
   public void initialize() {
     coralPivotSub.setPIDStat(false);
-    // coralPivotSub.setCoralPivotSetpoint(1);
+    // use the commented code 
+    // then delete the line of code above this comment and inside the execute method 
+    // if the coral pivot speed starts to break the gears
+    // I made this just in case this problem occured
+    // This creates a soft limit WITH the NEW kP value that is OVERSHOOTS from the setpoint
+    // If this causes difficulty to intake coral then call me in to fix it
+
+    // coralPivotSub.setPIDStat(true);
+    // coralPivotSub.setCoralPivotSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,6 +47,6 @@ public class L2AndL3PosCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return coralPivotSub.getPivotLimitSwitch();
+    return coralPivotSub.getPivotLimitSwitch(); // add coralPivotSub.atSetpoint() || if the problem occured
   }
 }
